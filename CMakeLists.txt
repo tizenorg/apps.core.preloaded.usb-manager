@@ -1,0 +1,52 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+PROJECT(usb-server C)
+
+SET(SRCS
+	src/um_common.c
+	src/um_customize.c
+	src/um_main.c
+	src/um_usb_accessory_manager.c
+	src/um_usb_connection_manager.c
+	src/um_usb_server.c)
+ 
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+INCLUDE(FindPkgConfig)
+pkg_check_modules(pkgs REQUIRED
+	appcore-common
+	ecore
+	vconf
+	heynoti
+	dlog
+	syspopup-caller
+	iniparser
+	devman
+	appsvc)
+
+FOREACH(flag ${pkgs_CFLAGS})
+	SET(EXTRA_CFLAGS "${EXTRA_CFLAGS} ${flag}")
+ENDFOREACH(flag)
+
+SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${EXTRA_CFLAGS}")
+SET(PREFIX ${CMAKE_INSTALL_PREFIX})
+MESSAGE("FLAGS: ${CMAKE_C_FLAGS}")
+
+ADD_DEFINITIONS("-DPREFIX=\"${CMAKE_INSTALL_PREFIX}\"")
+ADD_DEFINITIONS("-DFACTORYFS=\"$ENV{FACTORYFS}\"")
+ADD_DEFINITIONS("-DTARGET")
+
+SET(UDEV_RULES_PATH share/usb-server/udev-rules)
+SET(UDEV_RULES udev-rules/91-usb-server.rules)
+
+CONFIGURE_FILE(${UDEV_RULES}.in ${UDEV_RULES} @ONLY)
+
+ADD_EXECUTABLE(${PROJECT_NAME} ${SRCS})
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${pkgs_LDFLAGS} "-ldl")
+
+INSTALL(FILES ${UDEV_RULES} DESTINATION ${UDEV_RULES_PATH})
+
+INSTALL(TARGETS ${PROJECT_NAME} DESTINATION bin)
+INSTALL(PROGRAMS ${CMAKE_CURRENT_SOURCE_DIR}/usb-server.sh DESTINATION /etc/rc.d/init.d)
+INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/start_dr.sh DESTINATION bin)
+ADD_SUBDIRECTORY(po)
