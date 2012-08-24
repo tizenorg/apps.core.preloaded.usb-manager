@@ -1,5 +1,5 @@
 /*
- * Usb server
+ * Usb Server
  *
  * Copyright (c) 2000 - 2012 Samsung Electronics Co., Ltd. All rights reserved.
  *

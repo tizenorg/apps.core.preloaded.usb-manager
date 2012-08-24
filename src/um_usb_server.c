@@ -1,5 +1,5 @@
 /*
- * USB server
+ * Usb Server
  *
  * Copyright (c) 2000 - 2012 Samsung Electronics Co., Ltd. All rights reserved.
  *
@@ -70,6 +70,49 @@ int um_heynoti_add(int *fd, char *noti, void (*cb)(void *), UmMainData *ad)
 	return 0;
 }
 
+int um_heynoti_remove(int fd, char *noti, void (*cb)(void *))
+{
+	__USB_FUNC_ENTER__;
+	if (!noti) return -1;
+	if (!cb) return -1;
+	if (heynoti_unsubscribe(fd, noti, cb) < 0) {
+		USB_LOG("ERROR: heynoti_unsubscribe() \n");
+	}
+	if (heynoti_detach_handler(fd) < 0) {
+		USB_LOG("ERROR: heynoti_detach_handler() \n");
+	}
+	heynoti_close(fd);
+	 __USB_FUNC_EXIT__;
+	return 0;
+}
+
+static int terminate_usb_connection(UmMainData *ad)
+{
+	__USB_FUNC_ENTER__;
+	if (!ad) return -1;
+	int ret = -1;
+	int status = -1;
+
+	ret = um_usb_server_release_handler(ad);
+	if (ret < 0) USB_LOG("FAIL: um_usb_server_release_handler(ad)\n");
+
+	ret = disconnectUsb(ad);
+	um_retm_if(0 != ret, "FAIL: disconnectUsb(ad)");
+
+	/* If USB accessory is removed, the vconf value of accessory status should be updated */
+	ret = vconf_get_int(VCONFKEY_USB_ACCESSORY_STATUS, &status);
+	um_retm_if(0 != ret, "FAIL: vconf_get_int(VCONFKEY_USB_SERVER_ACCESSORY_STATUS_INT)\n");
+	if (VCONFKEY_USB_ACCESSORY_STATUS_CONNECTED == status) {
+		ret = vconf_set_int(VCONFKEY_USB_ACCESSORY_STATUS, VCONFKEY_USB_ACCESSORY_STATUS_DISCONNECTED);
+		um_retm_if(ret != 0, "FAIL: vconf_set_int(VCONFKEY_USB_ACCESSORY_STATUS, VCONFKEY_USB_ACCESSORY_STATUS_DISCONNECTED)");
+		ret = disconnectAccessory(ad);
+		um_retm_if(ret != 0, "FAIL: disconnectAccessory(ad)\n");
+	}
+	ecore_main_loop_quit();
+	__USB_FUNC_EXIT__;
+	return 0;
+}
+
 static void usb_chgdet_cb(keynode_t *in_key, void *data)
 {
 	__USB_FUNC_ENTER__;
@@ -80,23 +123,16 @@ static void usb_chgdet_cb(keynode_t *in_key, void *data)
 	status = check_usb_connection();
 	switch(status) {
 	case VCONFKEY_SYSMAN_USB_DISCONNECTED:
-		ret = disconnectUsb(ad);
-		um_retm_if(0 != ret, "FAIL: disconnectUsb(ad)");
-
-		/* If USB accessory is removed, the vconf value of accessory status should be updated */
-		ret = vconf_get_int(VCONFKEY_USB_ACCESSORY_STATUS, &status);
-		um_retm_if(0 != ret, "FAIL: vconf_get_int(VCONFKEY_USB_SERVER_ACCESSORY_STATUS_INT)\n");
-		if (VCONFKEY_USB_ACCESSORY_STATUS_CONNECTED == status) {
-			ret = vconf_set_int(VCONFKEY_USB_ACCESSORY_STATUS,
-						VCONFKEY_USB_ACCESSORY_STATUS_DISCONNECTED);
-			um_retm_if(ret != 0, "FAIL: vconf_set_int(VCONFKEY_USB_ACCESSORY_STATUS)");
-			ret = disconnectAccessory(ad);
-			um_retm_if(ret != 0, "FAIL: disconnectAccessory(ad)\n");
-		}
+		ret = terminate_usb_connection(ad);
+		um_retm_if(0 != ret, "FAIL: terminate_usb_connection(ad)");
 		break;
 	case VCONFKEY_SYSMAN_USB_AVAILABLE:
 		ret = connectUsb(ad);
 		um_retm_if(0 != ret, "FAIL: connectUsb(ad)");
+		if (VCONFKEY_SYSMAN_USB_AVAILABLE != check_usb_connection()) {
+			ret = terminate_usb_connection(ad);
+			um_retm_if(0 != ret, "FAIL: terminate_usb_connection(ad)\n");
+		}
 		break;
 	default:
 		break;
@@ -356,6 +392,9 @@ int um_usb_server_release_handler(UmMainData *ad)
 
 	ret = vconf_ignore_key_changed(VCONFKEY_MOBILE_HOTSPOT_MODE, change_hotspot_status_cb);
 	if (0 != ret) USB_LOG("ERROR: vconf_notify_key_changed(VCONFKEY_MOBILE_HOTSPOT_MODE)");
+
+	ret = um_heynoti_remove(ad->acc_noti_fd, "device_usb_accessory", acc_chgdet_cb);
+	if (0 != ret) USB_LOG("FAIL: um_heynoti_remove(ad->acc_noti_fd)\n");
 
 	__USB_FUNC_EXIT__;
 	return 0;

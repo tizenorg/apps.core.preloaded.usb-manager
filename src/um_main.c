@@ -1,5 +1,5 @@
 /*
- * USB server
+ * Usb Server
  *
  * Copyright (c) 2000 - 2012 Samsung Electronics Co., Ltd. All rights reserved.
  *
@@ -24,30 +24,12 @@
 static void fini(UmMainData *ad)
 {
 	__USB_FUNC_ENTER__;
-	int ret = um_usb_server_release_handler(ad);
-	if (ret < 0) USB_LOG("FAIL: um_usb_server_release_handler(ad)\n");
-	__USB_FUNC_EXIT__;
-}
-
-static void usb_server_start_daemon()
-{
-	__USB_FUNC_ENTER__;
-	pid_t pid;
-	if ((pid = fork()) < 0) {
-		exit(0);
-	} else if (pid != 0) {
-		exit(0);
-	}
-	chdir("/");
-	setsid();	/* Start a new session as a child of init process*/
-
 	__USB_FUNC_EXIT__;
 }
 
 static void usb_server_init(UmMainData *ad)
 {
 	__USB_FUNC_ENTER__;
-	usb_server_start_daemon();
 	um_signal_init();
 	appcore_set_i18n(PACKAGE, LOCALEDIR);
 	um_usb_server_init(ad);
@@ -61,12 +43,18 @@ static int usb_server_main(int argc, char **argv)
 	memset(&ad, 0x0, sizeof(UmMainData));
 	ad.usbAcc = (UsbAccessory*)malloc(sizeof(UsbAccessory));
 
+	ecore_init();
+
 	usb_server_init(&ad);
 
 	ecore_main_loop_begin();
 
 	fini(&ad);
 	ecore_shutdown();
+	FREE(ad.usbAcc);
+
+	if (VCONFKEY_SYSMAN_USB_AVAILABLE == check_usb_connection())
+		return 1;
 
 	__USB_FUNC_EXIT__;
 	return 0;
@@ -75,14 +63,18 @@ static int usb_server_main(int argc, char **argv)
 static int elm_main(int argc, char **argv)
 {
 	__USB_FUNC_ENTER__;
+	int ret = 0;
+	while(1) {
+		ret = usb_server_main(argc, argv);
+		if (ret == 0) break;
+	}
 	__USB_FUNC_EXIT__;
-	return usb_server_main(argc, argv);
+	return 0;
 }
 
 int main(int argc, char **argv)
 {
 	__USB_FUNC_ENTER__;
-	ecore_init();
 	__USB_FUNC_EXIT__;
 	return elm_main(argc, argv);
 }

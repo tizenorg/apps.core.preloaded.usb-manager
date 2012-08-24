@@ -1,5 +1,5 @@
 /*
- * USB server
+ * Usb Server
  *
  * Copyright (c) 2000 - 2012 Samsung Electronics Co., Ltd. All rights reserved.
  *
@@ -164,6 +164,7 @@ static int usbAccessoryRelease(UmMainData *ad)
 {
 	__USB_FUNC_ENTER__;
 	if (!ad) return -1;
+	if (ad->usbAcc == NULL) return -1;
 	FREE(ad->usbAcc->manufacturer);
 	FREE(ad->usbAcc->version);
 	FREE(ad->usbAcc->description);
@@ -180,8 +181,14 @@ void umAccInfoInit(UmMainData *ad)
 {
 	__USB_FUNC_ENTER__;
 	if (!ad) return ;
-	int ret = usbAccessoryRelease(ad);
-	if (0 != ret) USB_LOG("FAIL: usb_accessory_release(ad)\n");
+	if (ad->usbAcc == NULL) return;
+	ad->usbAcc->manufacturer = NULL;
+	ad->usbAcc->version = NULL;
+	ad->usbAcc->description = NULL;
+	ad->usbAcc->model = NULL;
+	ad->usbAcc->uri = NULL;
+	ad->usbAcc->serial = NULL;
+	ad->permittedPkgForAcc = NULL;
 
 	__USB_FUNC_EXIT__;
 }

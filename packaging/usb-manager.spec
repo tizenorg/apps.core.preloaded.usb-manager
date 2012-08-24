@@ -1,7 +1,7 @@
 Name:       usb-server
 Summary:    USB server
 Version: 	0.0.1
-Release:    3
+Release:    5
 Group:      TO_BE/FILLED_IN
 License:    TO_BE/FILLED_IN
 Source0:    usb-server-%{version}.tar.gz
@@ -34,11 +34,6 @@ make %{?jobs:-j%jobs}
 rm -rf %{buildroot}
 %make_install
 
-mkdir -p %{buildroot}%{_sysconfdir}/rc.d/rc3.d/
-ln -s %{_sysconfdir}/init.d/usb-server.sh %{buildroot}%{_sysconfdir}/rc.d/rc3.d/S36usb-server
-mkdir -p %{buildroot}%{_sysconfdir}/rc.d/rc5.d/
-ln -s %{_sysconfdir}/init.d/usb-server.sh %{buildroot}%{_sysconfdir}/rc.d/rc5.d/S01usb-server
-
 
 %post 
 
@@ -59,4 +54,3 @@ fi
 /usr/bin/usb-server
 %attr(440,root,root) /usr/share/locale/*/LC_MESSAGES/usb-server.mo
 %attr(440,root,root) /usr/share/usb-server/udev-rules/91-usb-server.rules
-/etc/*
