@@ -191,7 +191,9 @@ int um_vconf_key_notify(UmMainData *ad)
 	ret = vconf_notify_key_changed(VCONFKEY_SETAPPL_USB_SEL_MODE_INT, change_mode_cb, ad);
 	um_retvm_if(0 != ret, -1, "FAIL: vconf_notify_key_changed(VCONFKEY_SETAPPL_USB_MODE_INT)");
 	ret = vconf_notify_key_changed(VCONFKEY_MOBILE_HOTSPOT_MODE, change_hotspot_status_cb, ad);
-	um_retvm_if (0 != ret, -1, "ERROR: vconf_notify_key_changed(VCONFKEY_MOBILE_HOTSPOT_MODE)");
+	if (0 != ret) {
+		USB_LOG("ERROR: vconf_notify_key_changed(VCONFKEY_MOBILE_HOTSPOT_MODE)");
+	}
 
 	__USB_FUNC_EXIT__;
 	return 0;
