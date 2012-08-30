@@ -69,8 +69,8 @@
 static int mode_set_driver_0_0(int mode);
 static int mode_set_driver_1_0(int mode);
 static Eina_Bool write_file(const char *filepath, char *content);
-int check_driver_version(UmMainData *ad);
 
+int check_driver_version(UmMainData *ad);
 int mode_set_kernel(USB_DRIVER_VERSION version, int mode);
 void start_dr(UmMainData *ad);
 void load_connection_popup(UmMainData *ad);

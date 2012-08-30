@@ -24,11 +24,11 @@
 #define SDBD_START "/etc/init.d/sdbd start"
 #define SDBD_STOP  "/etc/init.d/sdbd stop"
 #define SET_USB0_IP \
-			"ifconfig usb0 192.168.129.3 up"
+			"/sbin/ifconfig usb0 192.168.129.3 up"
 #define UNSET_USB0_IP \
-			"ifconfig usb0 down"
+			"/sbin/ifconfig usb0 down"
 #define ADD_DEFAULT_GW \
-			"route add -net 192.168.129.0 netmask 255.255.255.0 dev usb0"
+			"/sbin/route add -net 192.168.129.0 netmask 255.255.255.0 dev usb0"
 #define OPENSSHD_START \
 			"/etc/init.d/ssh start"
 #define OPENSSHD_STOP \

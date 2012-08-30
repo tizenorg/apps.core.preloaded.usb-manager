@@ -97,16 +97,16 @@ static int terminate_usb_connection(UmMainData *ad)
 	if (ret < 0) USB_LOG("FAIL: um_usb_server_release_handler(ad)\n");
 
 	ret = disconnectUsb(ad);
-	um_retm_if(0 != ret, "FAIL: disconnectUsb(ad)");
+	if(0 != ret) USB_LOG("FAIL: disconnectUsb(ad)");
 
 	/* If USB accessory is removed, the vconf value of accessory status should be updated */
 	ret = vconf_get_int(VCONFKEY_USB_ACCESSORY_STATUS, &status);
-	um_retm_if(0 != ret, "FAIL: vconf_get_int(VCONFKEY_USB_SERVER_ACCESSORY_STATUS_INT)\n");
-	if (VCONFKEY_USB_ACCESSORY_STATUS_CONNECTED == status) {
-		ret = vconf_set_int(VCONFKEY_USB_ACCESSORY_STATUS, VCONFKEY_USB_ACCESSORY_STATUS_DISCONNECTED);
-		um_retm_if(ret != 0, "FAIL: vconf_set_int(VCONFKEY_USB_ACCESSORY_STATUS, VCONFKEY_USB_ACCESSORY_STATUS_DISCONNECTED)");
+	if (0 == ret && VCONFKEY_USB_ACCESSORY_STATUS_CONNECTED == status) {
+		ret = vconf_set_int(VCONFKEY_USB_ACCESSORY_STATUS,
+						VCONFKEY_USB_ACCESSORY_STATUS_DISCONNECTED);
+		if(0 != ret) USB_LOG("FAIL: vconf_set_int(VCONFKEY_USB_ACCESSORY_STATUS");
 		ret = disconnectAccessory(ad);
-		um_retm_if(ret != 0, "FAIL: disconnectAccessory(ad)\n");
+		if(0 != ret) USB_LOG("FAIL: disconnectAccessory(ad)\n");
 	}
 	ecore_main_loop_quit();
 	__USB_FUNC_EXIT__;
@@ -222,11 +222,15 @@ int noti_selected_btn(UmMainData *ad, int input)
 	char buf[SOCK_STR_LEN];
 	int ret = -1;
 	int ipc_result = -1;
-	if (input == REQ_PERM_NOTI_YES_BTN) {
+	switch (input) {
+	case REQ_ACC_PERM_NOTI_YES_BTN:
 		ret = grantAccessoryPermission(ad, tempAppId);
 		if (0 != ret) {
 			USB_LOG("FAIL: grant_permission_to_app(appId)");
 		}
+		break;
+	default:
+		break;
 	}
 	FREE(tempAppId);
 	sock_remote = ipc_noti_server_init();
@@ -284,13 +288,14 @@ Eina_Bool answer_to_ipc(void *data, Ecore_Fd_Handler *fd_handler)
 
 		input = atoi(str);
 		switch(input) {
-		case LAUNCH_APP:
+		case LAUNCH_APP_FOR_ACC:
 			ret = grantAccessoryPermission(ad, appId);
 			if (0 != ret) {
 				USB_LOG("FAIL: grant_permission_to_app(appId)");
 				snprintf(str, SOCK_STR_LEN, "%d", IPC_ERROR);
+				break;
 			}
-			ret = launch_app(ad->permittedPkgForAcc);
+			ret = launch_acc_app(ad->permittedPkgForAcc);
 			if (0 != ret) {
 				USB_LOG("FAIL: launch_app(appId)");
 				snprintf(str, SOCK_STR_LEN, "%d", IPC_ERROR);
@@ -298,21 +303,21 @@ Eina_Bool answer_to_ipc(void *data, Ecore_Fd_Handler *fd_handler)
 			}
 			snprintf(str, SOCK_STR_LEN, "%d", IPC_SUCCESS);
 			break;
-		case REQUEST_PERMISSION:
+		case REQ_ACC_PERMISSION:
 			tempAppId = strdup(appId);
 			USB_LOG("tempAppId: %s\n", tempAppId);
-			load_system_popup(ad, REQUEST_PERM_POPUP);
+			load_system_popup(ad, REQ_ACC_PERM_POPUP);
 			snprintf(str, SOCK_STR_LEN, "%d", IPC_SUCCESS);
 			break;
-		case HAS_PERMISSION:
-			if (EINA_TRUE == hasPermission(ad, appId)) {
+		case HAS_ACC_PERMISSION:
+			if (EINA_TRUE == hasAccPermission(ad, appId)) {
 				snprintf(str, SOCK_STR_LEN, "%d", IPC_SUCCESS);
 			} else {
 				snprintf(str, SOCK_STR_LEN, "%d", IPC_FAIL);
 			}
 			break;
-		case REQ_PERM_NOTI_YES_BTN:
-		case REQ_PERM_NOTI_NO_BTN:
+		case REQ_ACC_PERM_NOTI_YES_BTN:
+		case REQ_ACC_PERM_NOTI_NO_BTN:
 			snprintf(str, SOCK_STR_LEN, "%d", IPC_SUCCESS);
 			ret = noti_selected_btn(ad, input);
 			if (ret < 0) USB_LOG("FAIL: noti_selected_btn(input)\n");
@@ -329,6 +334,13 @@ Eina_Bool answer_to_ipc(void *data, Ecore_Fd_Handler *fd_handler)
 		case ERROR_POPUP_OK_BTN:
 			usb_connection_selected_btn(ad, input);
 			snprintf(str, SOCK_STR_LEN, "%d", IPC_SUCCESS);
+			break;
+		case IS_EMUL_BIN:
+			if (is_emul_bin()) {
+				snprintf(str, SOCK_STR_LEN, "%d", IPC_SUCCESS);
+			} else {
+				snprintf(str, SOCK_STR_LEN, "%d", IPC_FAIL);
+			}
 			break;
 		default:
 			snprintf(str, SOCK_STR_LEN, "%d", IPC_ERROR);

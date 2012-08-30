@@ -20,10 +20,6 @@
  */
 
 #include "um_customize.h"
-#include <iniparser.h>
-
-#define USB_DEFAULT_MODE_CONNECTED "Default USB mode enabled"
-#define USB_ACCESSORY_MODE_ENABLED "USB accessory mode enabled"
 
 /* If other kernel versions are added, we should modify this function */
 int check_driver_version(UmMainData *ad)
@@ -266,7 +262,8 @@ void load_connection_popup(UmMainData *ad)
 	USB_LOG("usbCurMode: %d\n", usbCurMode);
 	switch(usbCurMode) {
 	case SETTING_USB_DEFAULT_MODE:
-		ret = bundle_add(b, "1", dgettext(USB_SERVER_MESSAGE_DOMAIN, USB_DEFAULT_MODE_CONNECTED));
+		ret = bundle_add(b, "1", dgettext(USB_SERVER_MESSAGE_DOMAIN,
+								"IDS_COM_BODY_USB_CONNECTED"));
 		break;
 	case SETTING_USB_DEBUG_MODE:
 		ret = bundle_add(b, "1", dgettext(USB_SERVER_MESSAGE_DOMAIN,
@@ -277,7 +274,8 @@ void load_connection_popup(UmMainData *ad)
 								"IDS_ST_HEADER_USB_TETHERING_ENABLED"));
 		break;
 	case SETTING_USB_ACCESSORY_MODE:
-		ret = bundle_add(b, "1", dgettext(USB_SERVER_MESSAGE_DOMAIN, USB_ACCESSORY_MODE_ENABLED));
+		ret = bundle_add(b, "1", dgettext(USB_SERVER_MESSAGE_DOMAIN,
+								"IDS_COM_BODY_CONNECTED_TO_A_USB_ACCESSORY"));
 		break;
 
 	default:
@@ -308,7 +306,7 @@ void load_connection_popup(UmMainData *ad)
 	}
 
 	ret = syspopup_launch(TICKERNOTI_SYSPOPUP, b);
-	if (0 != ret) {
+	if (0 <= ret) {
 		USB_LOG("FAIL: syspopup_launch()\n");
 	}
 

@@ -1,0 +1,12 @@
+msgid "IDS_COM_BODY_USB_CONNECTED"
+msgstr "USB कनेक्ट किया गया"
+
+msgid "IDS_ST_HEADER_USB_TETHERING_ENABLED"
+msgstr "USB तेथरिंग सक्षम किया गया"
+
+msgid "IDS_HS_HEADER_USB_DEBUGGING_CONNECTED"
+msgstr "USB डिबगिंग कनेक्‍ट किया हुआ"
+
+msgid "IDS_COM_BODY_CONNECTED_TO_A_USB_ACCESSORY"
+msgstr "USB उपसाधन से कनेक्ट किया गया"
+

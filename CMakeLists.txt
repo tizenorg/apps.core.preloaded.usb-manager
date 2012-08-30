@@ -20,7 +20,6 @@ pkg_check_modules(pkgs REQUIRED
 	heynoti
 	dlog
 	syspopup-caller
-	iniparser
 	devman
 	appsvc)
 

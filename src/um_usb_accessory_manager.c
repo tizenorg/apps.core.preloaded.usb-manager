@@ -25,7 +25,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
-int initAccessory(UsbAccessory *usbAcc)
+int getAccessoryInfo(UsbAccessory *usbAcc)
 {
 	__USB_FUNC_ENTER__;
 	if (!usbAcc) return -1;
@@ -57,7 +57,7 @@ int accessoryAttached(UmMainData *ad)
 {
 	__USB_FUNC_ENTER__;
 	if (!ad) return -1;
-	load_system_popup(ad, SELECT_PKG_FOR_ACC_POPUP);
+	//load_system_popup(ad, SELECT_PKG_FOR_ACC_POPUP);
 	__USB_FUNC_EXIT__;
 	return 0;
 }
@@ -67,8 +67,8 @@ int connectAccessory(UmMainData *ad)
 	__USB_FUNC_ENTER__;
 	if (!ad) return -1;
 	int ret = -1;
-	ret = initAccessory(ad->usbAcc);
-	um_retvm_if(0 != ret, -1, "FAIL: initAccessory(ad->usbAcc)");
+	ret = getAccessoryInfo(ad->usbAcc);
+	um_retvm_if(0 != ret, -1, "FAIL: getAccessoryInfo(ad->usbAcc)");
 	getCurrentAccessory(ad);
 
 	/* Change usb mode to accessory mode */
@@ -131,7 +131,7 @@ int grantAccessoryPermission(UmMainData *ad, char *appId)
 	return 0;
 }
 
-int launch_app(char *appId)
+int launch_acc_app(char *appId)
 {
 	__USB_FUNC_ENTER__;
 	if (appId == NULL) return -1;
@@ -145,7 +145,7 @@ int launch_app(char *appId)
 	return 0;
 }
 
-Eina_Bool hasPermission(UmMainData *ad, char *appId)
+Eina_Bool hasAccPermission(UmMainData *ad, char *appId)
 {
 	/* Check whether or not a package has permission to access to device/accessory */
 	__USB_FUNC_ENTER__;

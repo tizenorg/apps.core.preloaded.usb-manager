@@ -1,0 +1,12 @@
+msgid "IDS_COM_BODY_USB_CONNECTED"
+msgstr "Підключено USB"
+
+msgid "IDS_ST_HEADER_USB_TETHERING_ENABLED"
+msgstr "Прив’язку USB ввімкнено"
+
+msgid "IDS_HS_HEADER_USB_DEBUGGING_CONNECTED"
+msgstr "Налагодження USB підключено"
+
+msgid "IDS_COM_BODY_CONNECTED_TO_A_USB_ACCESSORY"
+msgstr "Підключено до USB-пристрою"
+

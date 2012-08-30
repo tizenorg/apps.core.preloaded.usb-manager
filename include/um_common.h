@@ -24,6 +24,7 @@
 #define __UM_COMMON_H__
 
 #include <stdio.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <appcore-common.h>
 #include <heynoti.h>
@@ -32,6 +33,7 @@
 #include <sys/types.h>
 #include <glib.h>
 #include <syspopup_caller.h>
+#include <sys/utsname.h>
 #include "um_data.h"
 
 #include <errno.h>
@@ -113,5 +115,6 @@ int ipc_request_server_init();
 int ipc_request_server_close(UmMainData *ad);
 int ipc_noti_server_init();
 int ipc_noti_server_close(int *sock_remote);
+bool is_emul_bin();
 
 #endif /* __UM_COMMON_H__ */

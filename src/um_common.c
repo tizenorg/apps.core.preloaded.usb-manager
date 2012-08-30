@@ -22,7 +22,6 @@
 
 #include <vconf.h>
 #include <devman.h>
-
 #include "um_common.h"
 
 int check_usb_connection()
@@ -205,4 +204,25 @@ int notice_to_client_app(int sock_remote, int request, char *answer)
 	}
 	__USB_FUNC_EXIT__ ;
 	return 0;
+}
+
+bool is_emul_bin()
+{
+	__USB_FUNC_ENTER__ ;
+	int ret = -1;
+	struct utsname name;
+	ret = uname(&name);
+	if (ret < 0) {
+		__USB_FUNC_EXIT__ ;
+		return true;
+	} else {
+		USB_LOG("Machine name: %s", name.machine);
+		if (strcasestr(name.machine, "emul")) {
+			__USB_FUNC_EXIT__ ;
+			return true;
+		} else {
+			__USB_FUNC_EXIT__ ;
+			return false;
+		}
+	}
 }

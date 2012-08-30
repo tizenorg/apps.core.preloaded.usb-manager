@@ -1,7 +1,7 @@
 Name:       usb-server
 Summary:    USB server
 Version: 	0.0.1
-Release:    5
+Release:    7
 Group:      TO_BE/FILLED_IN
 License:    TO_BE/FILLED_IN
 Source0:    usb-server-%{version}.tar.gz
@@ -14,7 +14,6 @@ BuildRequires:  pkgconfig(ecore)
 BuildRequires:  pkgconfig(heynoti)
 BuildRequires:  pkgconfig(vconf)
 BuildRequires:  pkgconfig(devman)
-BuildRequires:  pkgconfig(iniparser)
 BuildRequires:  pkgconfig(dlog)
 BuildRequires:  pkgconfig(syspopup-caller)
 BuildRequires:  pkgconfig(appsvc)

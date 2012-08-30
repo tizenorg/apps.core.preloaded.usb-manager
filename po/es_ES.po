@@ -1,5 +1,12 @@
+msgid "IDS_COM_BODY_USB_CONNECTED"
+msgstr "USB conectado"
+
 msgid "IDS_ST_HEADER_USB_TETHERING_ENABLED"
 msgstr "Anclaje a red USB activado"
 
 msgid "IDS_HS_HEADER_USB_DEBUGGING_CONNECTED"
 msgstr "Depuración USB conectada"
+
+msgid "IDS_COM_BODY_CONNECTED_TO_A_USB_ACCESSORY"
+msgstr "Conectado a un accesorio USB"
+

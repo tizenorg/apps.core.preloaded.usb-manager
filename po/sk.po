@@ -1,12 +1,12 @@
 msgid "IDS_COM_BODY_USB_CONNECTED"
-msgstr "USB bağlandı"
+msgstr "USB pripojené"
 
 msgid "IDS_ST_HEADER_USB_TETHERING_ENABLED"
-msgstr "USB bağlanma etkin"
+msgstr "Zdieľanie pripojenia USB je povolené"
 
 msgid "IDS_HS_HEADER_USB_DEBUGGING_CONNECTED"
-msgstr "USB hata ayıklama bağlandı"
+msgstr "Ladenie USB pripojené"
 
 msgid "IDS_COM_BODY_CONNECTED_TO_A_USB_ACCESSORY"
-msgstr "Bir USB aksesuarına bağlandı"
+msgstr "Pripojené k príslušenstvu USB"
 

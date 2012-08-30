@@ -30,7 +30,7 @@
 #define USB_ACCESSORY_GET_URI			_IOW('M', 5, char[256])
 #define USB_ACCESSORY_GET_SERIAL		_IOW('M', 6, char[256])
 
-int initAccessory(UsbAccessory *usbAcc);
+int getAccessoryInfo(UsbAccessory *usbAcc);
 int connectAccessory(UmMainData *ad);
 int disconnectAccessory(UmMainData *ad);
 void getCurrentAccessory();
