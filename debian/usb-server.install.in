@@ -1,0 +1,6 @@
+/usr/bin/start_dr.sh
+/usr/bin/usb-server
+/usr/share/locale/*/LC_MESSAGES/usb-server.mo
+/usr/share/usb-server/udev-rules/91-usb-server.rules
+/etc/*
+/usr/bin/set_usb_debug.sh

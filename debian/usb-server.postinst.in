@@ -1,0 +1,17 @@
+#!/bin/sh
+
+chown root:root /usr/bin/usb-server
+chown root:root /usr/bin/start_dr.sh
+chown root:root /usr/bin/set_usb_debug.sh
+vconftool set -t int memory/usb/mass_storage_status "0" -u 0 -i -f
+vconftool set -t int memory/usb/accessory_status "0" -u 5000 -i -f
+vconftool set -t int db/usb/keep_debug "0"
+
+heynotitool set device_usb_accessory
+heynotitool set device_host_chgdet
+heynotitool set device_storage_chgdet
+
+mkdir -p /etc/udev/rules.d
+if ! [ -L /etc/udev/rules.d/91-usb-server.rules ]; then
+	ln -s @PREFIX@/share/usb-server/udev-rules/91-usb-server.rules /etc/udev/rules.d/91-usb-server.rules
+fi

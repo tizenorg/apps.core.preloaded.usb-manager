@@ -1,0 +1,48 @@
+msgid "IDS_BT_POP_CONNECTED_TO_HID_DEVICE"
+msgstr "HID qurilmaga ulandi"
+
+msgid "IDS_COM_BODY_USB_CONNECTED"
+msgstr "USB ulangan"
+
+msgid "IDS_ST_HEADER_USB_TETHERING_ENABLED"
+msgstr "USB bog‘lanish yoqilgan"
+
+msgid "IDS_HS_HEADER_USB_DEBUGGING_CONNECTED"
+msgstr "USB vositalari ulandi"
+
+msgid "IDS_COM_BODY_CONNECTED_TO_A_USB_ACCESSORY"
+msgstr "USB aksessuariga ulandi"
+
+msgid "IDS_COM_POP_PRINTER_CONNECTED_ABB2"
+msgstr "Printer ulandi"
+
+msgid "IDS_COM_POP_USB_CONNECTOR_CONNECTED"
+msgstr "USB-ulash vositasi ulandi"
+
+msgid "IDS_COM_POP_USB_CONNECTOR_DISCONNECTED"
+msgstr "USB-ulash vositasi uzildi"
+
+msgid "IDS_COM_POP_KEYBOARD_CONNECTED_ABB2"
+msgstr "Klaviatura ulandi"
+
+msgid "IDS_COM_POP_MOUSE_CONNECTED_ABB2"
+msgstr "Sichqoncha ulandi"
+
+msgid "IDS_COM_POP_CAMERA_CONNECTED_ABB2"
+msgstr "Kamera ulandi"
+
+msgid "IDS_COM_POP_USB_MASS_STORAGE_CONNECTED_ABB2"
+msgstr "USB-katta hajmli xotira ulandi"
+
+msgid "IDS_COM_POP_UNKNOWN_USB_DEVICE_CONNECTED"
+msgstr "Noma’lum USB-qurilma ulandi"
+
+msgid "IDS_COM_BODY_USB_DEVICE_SAFELY_REMOVED"
+msgstr "USB qurilma xavfsiz chiqarib olindi"
+
+msgid "IDS_COM_POP_USB_MASS_STORAGE_UNEXPECTEDLY_REMOVED"
+msgstr "USB-katta hajmli xotira kutilmaganda chiqarib olindi"
+
+msgid "IDS_COM_BODY_UNABLE_TO_USE_USB_STORAGE_AS_USB_MASS_STORAGE_ERROR_OCCURRED"
+msgstr "USB-ichki xotiradan katta hajmli xotira sifatida foydalanib bo‘lmaydi. Xato yuzaga keldi"
+

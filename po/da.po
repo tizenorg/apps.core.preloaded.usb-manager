@@ -1,0 +1,48 @@
+msgid "IDS_BT_POP_CONNECTED_TO_HID_DEVICE"
+msgstr "Tilsluttet HID-enhed"
+
+msgid "IDS_COM_BODY_USB_CONNECTED"
+msgstr "USB tilsluttet"
+
+msgid "IDS_ST_HEADER_USB_TETHERING_ENABLED"
+msgstr "USB-binding aktiveret"
+
+msgid "IDS_HS_HEADER_USB_DEBUGGING_CONNECTED"
+msgstr "USB-fejlsøgning tilsluttet"
+
+msgid "IDS_COM_BODY_CONNECTED_TO_A_USB_ACCESSORY"
+msgstr "Tilsluttet til USB-tilbehør"
+
+msgid "IDS_COM_POP_PRINTER_CONNECTED_ABB2"
+msgstr "Printer tilsluttet"
+
+msgid "IDS_COM_POP_USB_CONNECTOR_CONNECTED"
+msgstr "Intet USB-stik tilsluttet"
+
+msgid "IDS_COM_POP_USB_CONNECTOR_DISCONNECTED"
+msgstr "USB-stik frakoblet"
+
+msgid "IDS_COM_POP_KEYBOARD_CONNECTED_ABB2"
+msgstr "Tastatur tilsluttet"
+
+msgid "IDS_COM_POP_MOUSE_CONNECTED_ABB2"
+msgstr "Mus tilsluttet"
+
+msgid "IDS_COM_POP_CAMERA_CONNECTED_ABB2"
+msgstr "Kamera tilsluttet"
+
+msgid "IDS_COM_POP_USB_MASS_STORAGE_CONNECTED_ABB2"
+msgstr "USB-masselager tilsluttet"
+
+msgid "IDS_COM_POP_UNKNOWN_USB_DEVICE_CONNECTED"
+msgstr "Ukendt USB-enhed tilsluttet"
+
+msgid "IDS_COM_BODY_USB_DEVICE_SAFELY_REMOVED"
+msgstr "USB-enhed fjernet sikkert"
+
+msgid "IDS_COM_POP_USB_MASS_STORAGE_UNEXPECTEDLY_REMOVED"
+msgstr "USB-masselageret blev fjernet uventet"
+
+msgid "IDS_COM_BODY_UNABLE_TO_USE_USB_STORAGE_AS_USB_MASS_STORAGE_ERROR_OCCURRED"
+msgstr "Kan ikke bruge USB-lagring som USB-masselager. Fejl opstod"
+

@@ -1,0 +1,48 @@
+msgid "IDS_BT_POP_CONNECTED_TO_HID_DEVICE"
+msgstr "Spojen na HID uređaj"
+
+msgid "IDS_COM_BODY_USB_CONNECTED"
+msgstr "USB spojen"
+
+msgid "IDS_ST_HEADER_USB_TETHERING_ENABLED"
+msgstr "USB dijeljenje uključeno"
+
+msgid "IDS_HS_HEADER_USB_DEBUGGING_CONNECTED"
+msgstr "USB ispravljanje grešaka spojeno"
+
+msgid "IDS_COM_BODY_CONNECTED_TO_A_USB_ACCESSORY"
+msgstr "Spojen na USB priključak"
+
+msgid "IDS_COM_POP_PRINTER_CONNECTED_ABB2"
+msgstr "Pisač spojen"
+
+msgid "IDS_COM_POP_USB_CONNECTOR_CONNECTED"
+msgstr "USB kabel spojen"
+
+msgid "IDS_COM_POP_USB_CONNECTOR_DISCONNECTED"
+msgstr "USB kabel odspojen"
+
+msgid "IDS_COM_POP_KEYBOARD_CONNECTED_ABB2"
+msgstr "Tipkovnica spojena"
+
+msgid "IDS_COM_POP_MOUSE_CONNECTED_ABB2"
+msgstr "Miš spojen"
+
+msgid "IDS_COM_POP_CAMERA_CONNECTED_ABB2"
+msgstr "Kamera spojena"
+
+msgid "IDS_COM_POP_USB_MASS_STORAGE_CONNECTED_ABB2"
+msgstr "USB memorija spojena"
+
+msgid "IDS_COM_POP_UNKNOWN_USB_DEVICE_CONNECTED"
+msgstr "Nepoznati USB uređaj spojen"
+
+msgid "IDS_COM_BODY_USB_DEVICE_SAFELY_REMOVED"
+msgstr "USB uređaj sigurno izvađen"
+
+msgid "IDS_COM_POP_USB_MASS_STORAGE_UNEXPECTEDLY_REMOVED"
+msgstr "USB memorija neočekivano izvađena"
+
+msgid "IDS_COM_BODY_UNABLE_TO_USE_USB_STORAGE_AS_USB_MASS_STORAGE_ERROR_OCCURRED"
+msgstr "Nemoguće koristiti USB memoriju za USB spremanje podataka. Greška"
+

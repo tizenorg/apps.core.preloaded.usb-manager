@@ -1,0 +1,48 @@
+msgid "IDS_BT_POP_CONNECTED_TO_HID_DEVICE"
+msgstr "Pievienots HID ierīcei"
+
+msgid "IDS_COM_BODY_USB_CONNECTED"
+msgstr "USB ir pievienots"
+
+msgid "IDS_ST_HEADER_USB_TETHERING_ENABLED"
+msgstr "USB piesaiste aktivizēta"
+
+msgid "IDS_HS_HEADER_USB_DEBUGGING_CONNECTED"
+msgstr "USB atkļūdošana pievienota"
+
+msgid "IDS_COM_BODY_CONNECTED_TO_A_USB_ACCESSORY"
+msgstr "Izveidots savienojums ar USB piederumu"
+
+msgid "IDS_COM_POP_PRINTER_CONNECTED_ABB2"
+msgstr "Printeris pievienots"
+
+msgid "IDS_COM_POP_USB_CONNECTOR_CONNECTED"
+msgstr "USB savienotājs ir pievienots"
+
+msgid "IDS_COM_POP_USB_CONNECTOR_DISCONNECTED"
+msgstr "USB savienotājs ir atvienots"
+
+msgid "IDS_COM_POP_KEYBOARD_CONNECTED_ABB2"
+msgstr "Tastatūra pievienota"
+
+msgid "IDS_COM_POP_MOUSE_CONNECTED_ABB2"
+msgstr "Pele pievienota"
+
+msgid "IDS_COM_POP_CAMERA_CONNECTED_ABB2"
+msgstr "Kamera pievienota"
+
+msgid "IDS_COM_POP_USB_MASS_STORAGE_CONNECTED_ABB2"
+msgstr "USB lielapj. atmiņa pievienota"
+
+msgid "IDS_COM_POP_UNKNOWN_USB_DEVICE_CONNECTED"
+msgstr "Pievienota nezināma USB ierīce"
+
+msgid "IDS_COM_BODY_USB_DEVICE_SAFELY_REMOVED"
+msgstr "USB ierīce droši noņemta"
+
+msgid "IDS_COM_POP_USB_MASS_STORAGE_UNEXPECTEDLY_REMOVED"
+msgstr "USB lielapjoma atmiņa tika negaidīti noņemta"
+
+msgid "IDS_COM_BODY_UNABLE_TO_USE_USB_STORAGE_AS_USB_MASS_STORAGE_ERROR_OCCURRED"
+msgstr "Nevar lietot tālruņa iekšējo atmiņu kā USB lielapjoma atmiņu. Radās kļūda"
+

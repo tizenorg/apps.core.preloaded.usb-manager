@@ -1,0 +1,48 @@
+msgid "IDS_BT_POP_CONNECTED_TO_HID_DEVICE"
+msgstr "Ansluten till HID-enhet"
+
+msgid "IDS_COM_BODY_USB_CONNECTED"
+msgstr "USB har anslutits"
+
+msgid "IDS_ST_HEADER_USB_TETHERING_ENABLED"
+msgstr "Internetdelning via USB är aktiverat"
+
+msgid "IDS_HS_HEADER_USB_DEBUGGING_CONNECTED"
+msgstr "USB-felsökning har anslutits"
+
+msgid "IDS_COM_BODY_CONNECTED_TO_A_USB_ACCESSORY"
+msgstr "Ansluten till USB-utrustning"
+
+msgid "IDS_COM_POP_PRINTER_CONNECTED_ABB2"
+msgstr "Skrivare ansluten"
+
+msgid "IDS_COM_POP_USB_CONNECTOR_CONNECTED"
+msgstr "USB-koppling ansluten"
+
+msgid "IDS_COM_POP_USB_CONNECTOR_DISCONNECTED"
+msgstr "USB-koppling frånkopplad"
+
+msgid "IDS_COM_POP_KEYBOARD_CONNECTED_ABB2"
+msgstr "Tangentbord anslutet"
+
+msgid "IDS_COM_POP_MOUSE_CONNECTED_ABB2"
+msgstr "Musen har anslutits"
+
+msgid "IDS_COM_POP_CAMERA_CONNECTED_ABB2"
+msgstr "Kamera ansluten"
+
+msgid "IDS_COM_POP_USB_MASS_STORAGE_CONNECTED_ABB2"
+msgstr "USB-masslagring ansluten"
+
+msgid "IDS_COM_POP_UNKNOWN_USB_DEVICE_CONNECTED"
+msgstr "Okänd USB-enhet ansluten"
+
+msgid "IDS_COM_BODY_USB_DEVICE_SAFELY_REMOVED"
+msgstr "USB-enhet bortkopplad"
+
+msgid "IDS_COM_POP_USB_MASS_STORAGE_UNEXPECTEDLY_REMOVED"
+msgstr "USB-masslagringen togs oväntat bort"
+
+msgid "IDS_COM_BODY_UNABLE_TO_USE_USB_STORAGE_AS_USB_MASS_STORAGE_ERROR_OCCURRED"
+msgstr "Det går inte att använda USB-lagring som USB-masslagring. Ett fel inträffade"
+

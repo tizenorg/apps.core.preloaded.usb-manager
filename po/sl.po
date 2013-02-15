@@ -1,0 +1,48 @@
+msgid "IDS_BT_POP_CONNECTED_TO_HID_DEVICE"
+msgstr "Vzpostavljena povezava z napravo HID"
+
+msgid "IDS_COM_BODY_USB_CONNECTED"
+msgstr "Povezava USB je vzpostavljena"
+
+msgid "IDS_ST_HEADER_USB_TETHERING_ENABLED"
+msgstr "Uporaba vmesnika USB v telefonu kot modem omogočena"
+
+msgid "IDS_HS_HEADER_USB_DEBUGGING_CONNECTED"
+msgstr "USB iskanje napak je povezano"
+
+msgid "IDS_COM_BODY_CONNECTED_TO_A_USB_ACCESSORY"
+msgstr "Povezan z dodatkom USB"
+
+msgid "IDS_COM_POP_PRINTER_CONNECTED_ABB2"
+msgstr "Tiskalnik je povezan"
+
+msgid "IDS_COM_POP_USB_CONNECTOR_CONNECTED"
+msgstr "Priključek USB je povezan"
+
+msgid "IDS_COM_POP_USB_CONNECTOR_DISCONNECTED"
+msgstr "Priključek USB ni povezan"
+
+msgid "IDS_COM_POP_KEYBOARD_CONNECTED_ABB2"
+msgstr "Tipkovnica je povezana"
+
+msgid "IDS_COM_POP_MOUSE_CONNECTED_ABB2"
+msgstr "Miška je povezana"
+
+msgid "IDS_COM_POP_CAMERA_CONNECTED_ABB2"
+msgstr "Kamera je povezana"
+
+msgid "IDS_COM_POP_USB_MASS_STORAGE_CONNECTED_ABB2"
+msgstr "Pomnilnik USB je povezan"
+
+msgid "IDS_COM_POP_UNKNOWN_USB_DEVICE_CONNECTED"
+msgstr "Neznana naprava USB je povezana"
+
+msgid "IDS_COM_BODY_USB_DEVICE_SAFELY_REMOVED"
+msgstr "Naprava USB je bil varno odstranjena"
+
+msgid "IDS_COM_POP_USB_MASS_STORAGE_UNEXPECTEDLY_REMOVED"
+msgstr "Pomnilnik USB je bil nepričakovano odstranjen"
+
+msgid "IDS_COM_BODY_UNABLE_TO_USE_USB_STORAGE_AS_USB_MASS_STORAGE_ERROR_OCCURRED"
+msgstr "Pomnilnika USB ni mogoče uporabiti kot napravo USB za shranjevanje. Prišlo je do napake"
+

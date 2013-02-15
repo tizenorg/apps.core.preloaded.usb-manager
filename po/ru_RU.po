@@ -1,0 +1,48 @@
+msgid "IDS_BT_POP_CONNECTED_TO_HID_DEVICE"
+msgstr "Подключено к устройству HID"
+
+msgid "IDS_COM_BODY_USB_CONNECTED"
+msgstr "Подключено через USB"
+
+msgid "IDS_ST_HEADER_USB_TETHERING_ENABLED"
+msgstr "Модем USB включен"
+
+msgid "IDS_HS_HEADER_USB_DEBUGGING_CONNECTED"
+msgstr "Отладка USB подключена"
+
+msgid "IDS_COM_BODY_CONNECTED_TO_A_USB_ACCESSORY"
+msgstr "Подключено к USB-аксессуару"
+
+msgid "IDS_COM_POP_PRINTER_CONNECTED_ABB2"
+msgstr "Принтер подключен"
+
+msgid "IDS_COM_POP_USB_CONNECTOR_CONNECTED"
+msgstr "Подключен USB-кабель"
+
+msgid "IDS_COM_POP_USB_CONNECTOR_DISCONNECTED"
+msgstr "USB-кабель отключен"
+
+msgid "IDS_COM_POP_KEYBOARD_CONNECTED_ABB2"
+msgstr "Клавиатура подключена"
+
+msgid "IDS_COM_POP_MOUSE_CONNECTED_ABB2"
+msgstr "Мышь подключена"
+
+msgid "IDS_COM_POP_CAMERA_CONNECTED_ABB2"
+msgstr "Камера подключена"
+
+msgid "IDS_COM_POP_USB_MASS_STORAGE_CONNECTED_ABB2"
+msgstr "USB-носитель подключен"
+
+msgid "IDS_COM_POP_UNKNOWN_USB_DEVICE_CONNECTED"
+msgstr "Подключено неизвестное USB-устройство"
+
+msgid "IDS_COM_BODY_USB_DEVICE_SAFELY_REMOVED"
+msgstr "USB-устройство безопасно извлечено"
+
+msgid "IDS_COM_POP_USB_MASS_STORAGE_UNEXPECTEDLY_REMOVED"
+msgstr "USB-носитель неожиданно извлечен"
+
+msgid "IDS_COM_BODY_UNABLE_TO_USE_USB_STORAGE_AS_USB_MASS_STORAGE_ERROR_OCCURRED"
+msgstr "Невозможно использовать внутреннюю память в качестве съемного USB-носителя. Произошла ошибка"
+

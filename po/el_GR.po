@@ -1,0 +1,48 @@
+msgid "IDS_BT_POP_CONNECTED_TO_HID_DEVICE"
+msgstr "Συνδέθηκε σε συσκευή HID"
+
+msgid "IDS_COM_BODY_USB_CONNECTED"
+msgstr "Το USB συνδέθηκε"
+
+msgid "IDS_ST_HEADER_USB_TETHERING_ENABLED"
+msgstr "Ενεργοποιήθηκε το tethering USB"
+
+msgid "IDS_HS_HEADER_USB_DEBUGGING_CONNECTED"
+msgstr "Εντοπισμός σφαλμάτων USB"
+
+msgid "IDS_COM_BODY_CONNECTED_TO_A_USB_ACCESSORY"
+msgstr "Συνδέθηκε σε αξεσουάρ αποθήκευσης USB"
+
+msgid "IDS_COM_POP_PRINTER_CONNECTED_ABB2"
+msgstr "Συνδέθηκε εκτυπωτής"
+
+msgid "IDS_COM_POP_USB_CONNECTOR_CONNECTED"
+msgstr "Συνδέθηκε ο προσαρμογέας USB"
+
+msgid "IDS_COM_POP_USB_CONNECTOR_DISCONNECTED"
+msgstr "Ο προσαρμογέας USB αποσυνδέθηκε"
+
+msgid "IDS_COM_POP_KEYBOARD_CONNECTED_ABB2"
+msgstr "Συνδέθηκε πληκτρολόγιο"
+
+msgid "IDS_COM_POP_MOUSE_CONNECTED_ABB2"
+msgstr "Συνδέθηκε ποντίκι"
+
+msgid "IDS_COM_POP_CAMERA_CONNECTED_ABB2"
+msgstr "Η κάμερα συνδέθηκε"
+
+msgid "IDS_COM_POP_USB_MASS_STORAGE_CONNECTED_ABB2"
+msgstr "Συνδ. συσκ. μαζικής αποθ. USB"
+
+msgid "IDS_COM_POP_UNKNOWN_USB_DEVICE_CONNECTED"
+msgstr "Συνδέθηκε άγνωστη συσκευή USB"
+
+msgid "IDS_COM_BODY_USB_DEVICE_SAFELY_REMOVED"
+msgstr "Η συσκευή USB καταργήθηκε με ασφάλεια"
+
+msgid "IDS_COM_POP_USB_MASS_STORAGE_UNEXPECTEDLY_REMOVED"
+msgstr "Η συσκευή μαζικής αποθήκευσης USB αφαιρέθηκε απρόσμενα"
+
+msgid "IDS_COM_BODY_UNABLE_TO_USE_USB_STORAGE_AS_USB_MASS_STORAGE_ERROR_OCCURRED"
+msgstr "Δεν είναι δυνατή η χρήση της συσκευής USB ως συσκευής μαζικής αποθήκευσης USB. Προέκυψε ένα σφάλμα"
+

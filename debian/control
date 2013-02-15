@@ -1,0 +1,28 @@
+Source: usb-manager
+Section: tools
+Priority: extra
+Maintainer: Taeyoung Kim <ty317.kim@samsung.com> Taesoo Jun <steve.jun@samsung.com>
+Uploaders: Taeyoung Kim <ty317.kim@samsung.com> Taesoo Jun <steve.jun@samsung.com>
+Build-Depends: debhelper (>= 5),
+		libappcore-common-dev,
+		libecore-dev,
+		libheynoti-dev,
+		libslp-setting-dev,
+		libdevman-dev,
+		dlog-dev,
+		syspopup-caller-dev,
+		iniparser-dev,
+		libappsvc-dev
+Standards-Version: 3.7.2
+
+Package: usb-server
+Section: devel
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: usb server package
+
+Package: usb-server-dbg
+Section: debug
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, usb-server (= ${Source-Version})
+Description: usb server degug package

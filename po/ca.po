@@ -1,0 +1,48 @@
+msgid "IDS_BT_POP_CONNECTED_TO_HID_DEVICE"
+msgstr "Connectat a un dispositiu HID"
+
+msgid "IDS_COM_BODY_USB_CONNECTED"
+msgstr "USB connectada"
+
+msgid "IDS_ST_HEADER_USB_TETHERING_ENABLED"
+msgstr "Tethering USB habilitat"
+
+msgid "IDS_HS_HEADER_USB_DEBUGGING_CONNECTED"
+msgstr "Depuració USB connectada"
+
+msgid "IDS_COM_BODY_CONNECTED_TO_A_USB_ACCESSORY"
+msgstr "Connectat a un accessori USB"
+
+msgid "IDS_COM_POP_PRINTER_CONNECTED_ABB2"
+msgstr "Impressora connectada"
+
+msgid "IDS_COM_POP_USB_CONNECTOR_CONNECTED"
+msgstr "Connector USB connectat"
+
+msgid "IDS_COM_POP_USB_CONNECTOR_DISCONNECTED"
+msgstr "Connector USB desconnectat"
+
+msgid "IDS_COM_POP_KEYBOARD_CONNECTED_ABB2"
+msgstr "Teclat connectat"
+
+msgid "IDS_COM_POP_MOUSE_CONNECTED_ABB2"
+msgstr "Ratolí connectat"
+
+msgid "IDS_COM_POP_CAMERA_CONNECTED_ABB2"
+msgstr "Càmera connectada"
+
+msgid "IDS_COM_POP_USB_MASS_STORAGE_CONNECTED_ABB2"
+msgstr "Emmagat USB massiu connectat"
+
+msgid "IDS_COM_POP_UNKNOWN_USB_DEVICE_CONNECTED"
+msgstr "Dispositiu USB desconegut connectat"
+
+msgid "IDS_COM_BODY_USB_DEVICE_SAFELY_REMOVED"
+msgstr "Dispositiu USB retirat amb seguretat"
+
+msgid "IDS_COM_POP_USB_MASS_STORAGE_UNEXPECTEDLY_REMOVED"
+msgstr "L'emmagatzematge massiu USB s'ha retirat de forma inesperada"
+
+msgid "IDS_COM_BODY_UNABLE_TO_USE_USB_STORAGE_AS_USB_MASS_STORAGE_ERROR_OCCURRED"
+msgstr "No es pot utilitzar l'emmagatzematge USB com a emmagatzematge USB massiu. S'ha produït un error"
+
