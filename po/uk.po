@@ -1,0 +1,48 @@
+msgid "IDS_BT_POP_CONNECTED_TO_HID_DEVICE"
+msgstr "Підключено до пристрою HID"
+
+msgid "IDS_COM_BODY_USB_CONNECTED"
+msgstr "Підключено USB"
+
+msgid "IDS_ST_HEADER_USB_TETHERING_ENABLED"
+msgstr "Прив’язку USB ввімкнено"
+
+msgid "IDS_HS_HEADER_USB_DEBUGGING_CONNECTED"
+msgstr "Налагодження USB підключено"
+
+msgid "IDS_COM_BODY_CONNECTED_TO_A_USB_ACCESSORY"
+msgstr "Підключено до USB-пристрою"
+
+msgid "IDS_COM_POP_PRINTER_CONNECTED_ABB2"
+msgstr "Принтер підключено"
+
+msgid "IDS_COM_POP_USB_CONNECTOR_CONNECTED"
+msgstr "З’єднувач USB підключено"
+
+msgid "IDS_COM_POP_USB_CONNECTOR_DISCONNECTED"
+msgstr "З’єднувач USB від’єднано"
+
+msgid "IDS_COM_POP_KEYBOARD_CONNECTED_ABB2"
+msgstr "Клавіатуру підключено"
+
+msgid "IDS_COM_POP_MOUSE_CONNECTED_ABB2"
+msgstr "Мишу підключено"
+
+msgid "IDS_COM_POP_CAMERA_CONNECTED_ABB2"
+msgstr "Камеру підключено"
+
+msgid "IDS_COM_POP_USB_MASS_STORAGE_CONNECTED_ABB2"
+msgstr "USB-накопичувач підключено"
+
+msgid "IDS_COM_POP_UNKNOWN_USB_DEVICE_CONNECTED"
+msgstr "Невідомий USB-пристрій підключено"
+
+msgid "IDS_COM_BODY_USB_DEVICE_SAFELY_REMOVED"
+msgstr "USB-пристрій безпечно видалено"
+
+msgid "IDS_COM_POP_USB_MASS_STORAGE_UNEXPECTEDLY_REMOVED"
+msgstr "USB-накопичувач неочікувано вийнято"
+
+msgid "IDS_COM_BODY_UNABLE_TO_USE_USB_STORAGE_AS_USB_MASS_STORAGE_ERROR_OCCURRED"
+msgstr "Неможливо використати внутрішню пам’ять як USB-накопичувач. Сталася помилка"
+

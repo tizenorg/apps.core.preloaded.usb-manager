@@ -1,0 +1,48 @@
+msgid "IDS_BT_POP_CONNECTED_TO_HID_DEVICE"
+msgstr "已連接至 HID 裝置"
+
+msgid "IDS_COM_BODY_USB_CONNECTED"
+msgstr "USB 已連接"
+
+msgid "IDS_ST_HEADER_USB_TETHERING_ENABLED"
+msgstr "已啟用 USB 網絡共享"
+
+msgid "IDS_HS_HEADER_USB_DEBUGGING_CONNECTED"
+msgstr "已連接USB除錯"
+
+msgid "IDS_COM_BODY_CONNECTED_TO_A_USB_ACCESSORY"
+msgstr "已連接至 USB 配件"
+
+msgid "IDS_COM_POP_PRINTER_CONNECTED_ABB2"
+msgstr "打印機已連接"
+
+msgid "IDS_COM_POP_USB_CONNECTOR_CONNECTED"
+msgstr "已連接 USB 連接器"
+
+msgid "IDS_COM_POP_USB_CONNECTOR_DISCONNECTED"
+msgstr "已中斷 USB 連接器連接"
+
+msgid "IDS_COM_POP_KEYBOARD_CONNECTED_ABB2"
+msgstr "鍵盤已連接"
+
+msgid "IDS_COM_POP_MOUSE_CONNECTED_ABB2"
+msgstr "滑鼠已連接"
+
+msgid "IDS_COM_POP_CAMERA_CONNECTED_ABB2"
+msgstr "相機已連接"
+
+msgid "IDS_COM_POP_USB_MASS_STORAGE_CONNECTED_ABB2"
+msgstr "USB 大容量儲存裝置已連接"
+
+msgid "IDS_COM_POP_UNKNOWN_USB_DEVICE_CONNECTED"
+msgstr "未知 USB 裝置已連接"
+
+msgid "IDS_COM_BODY_USB_DEVICE_SAFELY_REMOVED"
+msgstr "已安全移除 USB 裝置"
+
+msgid "IDS_COM_POP_USB_MASS_STORAGE_UNEXPECTEDLY_REMOVED"
+msgstr "USB 大容量儲存裝置被意外移除"
+
+msgid "IDS_COM_BODY_UNABLE_TO_USE_USB_STORAGE_AS_USB_MASS_STORAGE_ERROR_OCCURRED"
+msgstr "無法使用 USB 儲存裝置為 USB 大容量儲存裝置。發生錯誤"
+

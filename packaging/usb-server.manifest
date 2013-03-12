@@ -1,0 +1,20 @@
+<manifest>
+<define>
+    <domain name="usb-server" policy="restrict" plist="com.samsung.usb-syspopup,com.samsung.setting,system-server"/>
+	<provide>
+		<label name="usb-server::usb-rx"/>
+		<label name="usb-server::usb-r"/>
+		<label name="usb-server::usb-rw"/>
+	</provide>
+</define>
+<assign>
+	<filesystem path="/usr/bin/start_dr.sh"                                     label="usb-server::usb-rx"/>
+	<filesystem path="/usr/bin/set_usb_debug.sh"                                label="usb-server::usb-rx"/>
+	<filesystem path="/usr/bin/usb-server"                                      label="usb-server::usb-rx"/>
+	<filesystem path="/usr/share/usb-server/udev-rules/91-usb-server.rules"     label="usb-server::usb-r"/>
+	<filesystem path="/opt/share/noti/device_usb_accessory"                     label="usb-server::usb-rw"/>
+</assign>
+<request>
+	<domain name="usb-server"/>
+</request>
+</manifest>

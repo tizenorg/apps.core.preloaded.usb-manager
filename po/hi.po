@@ -1,0 +1,48 @@
+msgid "IDS_BT_POP_CONNECTED_TO_HID_DEVICE"
+msgstr "HID डिवाइस से जोड़ा गया"
+
+msgid "IDS_COM_BODY_USB_CONNECTED"
+msgstr "USB कनेक्ट किया गया"
+
+msgid "IDS_ST_HEADER_USB_TETHERING_ENABLED"
+msgstr "USB तेथरिंग सक्षम किया गया"
+
+msgid "IDS_HS_HEADER_USB_DEBUGGING_CONNECTED"
+msgstr "USB डिबगिंग कनेक्‍ट किया हुआ"
+
+msgid "IDS_COM_BODY_CONNECTED_TO_A_USB_ACCESSORY"
+msgstr "USB उपसाधन से कनेक्ट किया गया"
+
+msgid "IDS_COM_POP_PRINTER_CONNECTED_ABB2"
+msgstr "प्रिंटर कनेक्ट किया गया"
+
+msgid "IDS_COM_POP_USB_CONNECTOR_CONNECTED"
+msgstr "USB कनेक्‍टर कनेक्ट किया गया"
+
+msgid "IDS_COM_POP_USB_CONNECTOR_DISCONNECTED"
+msgstr "USB कनेक्‍टर डिसकनेक्ट किया गया"
+
+msgid "IDS_COM_POP_KEYBOARD_CONNECTED_ABB2"
+msgstr "कीबोर्ड कनेक्ट किया गया"
+
+msgid "IDS_COM_POP_MOUSE_CONNECTED_ABB2"
+msgstr "माउस कनेक्ट किया गया"
+
+msgid "IDS_COM_POP_CAMERA_CONNECTED_ABB2"
+msgstr "कैमरा कनेक्ट किया गया"
+
+msgid "IDS_COM_POP_USB_MASS_STORAGE_CONNECTED_ABB2"
+msgstr "USB मास स्‍टोरेज कनेक्ट किया गया"
+
+msgid "IDS_COM_POP_UNKNOWN_USB_DEVICE_CONNECTED"
+msgstr "अज्ञात USB डिवाइस कनेक्ट किया गया"
+
+msgid "IDS_COM_BODY_USB_DEVICE_SAFELY_REMOVED"
+msgstr "यूएसबी डिवाइस सुरक्षित रूप से निकाला गया"
+
+msgid "IDS_COM_POP_USB_MASS_STORAGE_UNEXPECTEDLY_REMOVED"
+msgstr "USB मास स्टोरेज को अप्रत्याशित रूप से निकाला गया"
+
+msgid "IDS_COM_BODY_UNABLE_TO_USE_USB_STORAGE_AS_USB_MASS_STORAGE_ERROR_OCCURRED"
+msgstr "USB मास स्‍टोरेज के रूप में USB स्टोरेज का उपयोग करने में अक्षम। त्रुटि पाई गई"
+
