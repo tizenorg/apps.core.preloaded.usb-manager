@@ -15,8 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef __USB_SETTING_CUSTOMIZE_H__
-#define __USB_SETTING_CUSTOMIZE_H__
+#ifndef __UM_CUSTOMIZE_H__
+#define __UM_CUSTOMIZE_H__
 
 #include <string.h>
 #include <vconf.h>
@@ -52,6 +52,8 @@
 	"/sys/class/usb_mode/usb0/bDeviceSubClass"
 #define USB_DEVICE_PROTOCOL \
 	"/sys/class/usb_mode/usb0/bDeviceProtocol"
+#define USB_DIAG_CLIENT \
+	"/sys/class/usb_mode/usb0/f_diag/clients"
 #define DRIVER_VERSION_BUF_LEN  64
 #define FILE_PATH_BUF_SIZE      256
 #define KERNEL_SET_BUF_SIZE     3
@@ -63,20 +65,14 @@
 #define USB_SERVER_MESSAGE_DOMAIN \
 	"usb-server"
 
-#define USB_NOTICE_SYSPOPUP_FAIL \
-	"USB system popup failed"
 #define TICKERNOTI_SYSPOPUP \
 	"tickernoti-syspopup"
 
-static int mode_set_driver_0_0(int mode);
-static int mode_set_driver_1_0(UmMainData *ad, int mode);
-static int mode_set_driver_1_1(UmMainData *ad, int mode);
-static Eina_Bool write_file(const char *filepath, char *content);
-
 int check_driver_version(UmMainData *ad);
 int mode_set_kernel(UmMainData *ad, int mode);
-void start_dr(UmMainData *ad);
-void load_connection_popup(UmMainData *ad, char *msg, int orientation);
+void load_connection_popup(char *msg);
+bool is_device_supported(int class);
+int get_default_usb_device(UmMainData *ad);
 
 #endif
 

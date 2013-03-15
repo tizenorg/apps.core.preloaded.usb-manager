@@ -15,31 +15,21 @@
  * limitations under the License.
  */
 
+#ifndef __UM_USB_CONNECTION_MANAGER_H__
+#define __UM_USB_CONNECTION_MANAGER_H__
+
 #include "um_customize.h"
 
-#define SDBD_START "/etc/init.d/sdbd start"
-#define SDBD_STOP  "/etc/init.d/sdbd stop"
-#define SET_USB0_IP \
-			"/sbin/ifconfig usb0 192.168.129.3 up"
-#define UNSET_USB0_IP \
-			"/sbin/ifconfig usb0 down"
-#define ADD_DEFAULT_GW \
-			"/sbin/route add -net 192.168.129.0 netmask 255.255.255.0 dev usb0"
-#define OPENSSHD_START \
-			"/etc/init.d/ssh start"
-#define OPENSSHD_STOP \
-			"/etc/init.d/ssh stop"
-
-int action_clean(UmMainData *ad, int mode);
-int call_cmd(char* cmd);
 int connectUsbClient(UmMainData *ad);
-int disconnectUsbClient(UmMainData *ad);
+void disconnectUsbClient(UmMainData *ad);
+void action_clean(UmMainData *ad, int mode);
 void debug_mode_cb(keynode_t* in_key, void *data);
 void change_mode_cb(keynode_t* in_key, void *data);
-void change_hotspot_status_cb(keynode_t* in_key, void *data);
-static int check_mobile_hotspot_status();
-static int run_core_action(UmMainData *ad, int mode);
-int set_USB_mode(UmMainData *ad, int mode);
+void change_prev_mode_cb(keynode_t* in_key, void *data);
 void change_hotspot_status_cb(keynode_t* in_key, void *data);
 void usb_connection_selected_btn(UmMainData *ad, int input);
+int launch_acc_app(char *appId);
+Eina_Bool hasAccPermission(UmMainData *ad, char *appId);
+
+#endif /* __UM_USB_CONNECTION_MANAGER_H__ */
 

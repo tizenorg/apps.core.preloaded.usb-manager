@@ -15,6 +15,9 @@
  * limitations under the License.
  */
 
+#ifndef __UM_USB_ACCESSORY_MANAGER_H__
+#define __UM_USB_ACCESSORY_MANAGER_H__
+
 #include "um_customize.h"
 #include <vconf.h>
 #include <appsvc.h>
@@ -26,8 +29,11 @@
 #define USB_ACCESSORY_GET_URI			_IOW('M', 5, char[256])
 #define USB_ACCESSORY_GET_SERIAL		_IOW('M', 6, char[256])
 
-int getAccessoryInfo(UsbAccessory *usbAcc);
-int connectAccessory(UmMainData *ad);
-int disconnectAccessory(UmMainData *ad);
-void getCurrentAccessory();
-void umAccInfoInit(UmMainData *ad);
+void disconnect_accessory(UmMainData *ad);
+void accessory_info_init(UmMainData *ad);
+void get_current_accessory();
+int grant_accessory_permission(UmMainData *ad, char *appId);
+bool has_accessory_permission(UmMainData *ad, char *appId);
+void um_uevent_usb_accessory_added(UmMainData *ad);
+
+#endif /* __UM_USB_ACCESSORY_MANAGER_H__ */

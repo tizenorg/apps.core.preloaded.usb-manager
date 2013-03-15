@@ -1,48 +1,62 @@
 #!/bin/sh
 
-if [ "$1" = "--set" ]
-then
-	vconftool set -t bool db/setting/debug_mode "1" -f
-	echo "Debug mode is loaded"
+case "$1" in
 
-elif [ "$1" = "--unset" ]
-then
-	vconftool set -t bool db/setting/debug_mode "0" -f
-	echo "USB default mode is loaded"
-
-elif [ "$1" = "--debug" ]
-then
-	vconftool set -t bool db/setting/debug_mode "1" -f
-	echo "Debug mode is loaded"
+"--debug")
+	vconftool set -t int db/usb/sel_mode "2" -f
 	vconftool set -t int db/setting/lcd_backlight_normal "600" -f
 	echo "The backlight time of the display is set to 10 minutes"
 	vconftool set -t bool db/setting/brightness_automatic "1" -f
 	echo "Brightness is set automatic"
+	;;
 
-elif [ "$1" = "--sshon" ]
-then
-	vconftool set -t int memory/setting/usb_sel_mode "3" -f
-	vconftool set -t int db/usb/keep_ethernet "1" -f
-	echo "SSH is enabled"
+"--default" | "--sshoff" | "--unset")
+	vconftool set -t int db/usb/sel_mode "1" -f
+	vconftool set -t bool db/setting/debug_mode "0" -f
+	;;
 
-elif [ "$1" = "--sshoff" ]
-then
-	vconftool set -t int memory/setting/usb_sel_mode "0" -f
-	vconftool set -t int db/usb/keep_ethernet "0" -f
-	echo "SSH is disabled"
+"--sdb" | "--set")
+	vconftool set -t int db/usb/sel_mode "2" -f
+	vconftool set -t bool db/setting/debug_mode "1" -f
+	;;
 
+"--sdb-diag")
+	vconftool set -t int db/usb/sel_mode "3" -f
+	vconftool set -t bool db/setting/debug_mode "1" -f
+	;;
 
-elif [ "$1" = "--help" ]
-then
+"--rndis-tethering")
+	vconftool set -t int db/usb/sel_mode "4" -f
+	;;
+
+"--rndis" | "--sshon")
+	vconftool set -t int db/usb/sel_mode "5" -f
+	vconftool set -t bool db/setting/debug_mode "0" -f
+	;;
+
+"--rndis-sdb")
+	vconftool set -t int db/usb/sel_mode "6" -f
+	vconftool set -t bool db/setting/debug_mode "1" -f
+	;;
+
+"--help")
 	echo "set_usb_debug.sh: usage:"
-	echo "    --help      this message "
-	echo "    --set       load Debug mode"
-	echo "    --unset     unload Debug mode"
-	echo "    --debug     load debug mode with 10 minutes backlight time and automatic brightness"
-	echo "    --sshon     load SSH mode"
-	echo "    --sshoff    unload SSH mode"
+	echo "    --help           This message "
+	echo "    --set            Load Debug mode"
+	echo "    --unset          Unload Debug mode"
+	echo "    --debug          Load debug mode with 10 minutes backlight time"
+	echo "                     and automatic brightness"
+	echo "    --sshon          Load SSH mode"
+	echo "    --sshoff         Unload SSH mode"
+	echo "    --default        Charging mode"
+	echo "    --sdb            Load sdb"
+	echo "    --sdb-diag       Load sdb, and diag"
+	echo "                     If diag is not supported, charging mode is loaded"
+	echo "    --rndis          Load rndis only"
+	;;
 
-else
+*)
 	echo "Wrong parameters. Please use option --help to check options "
+	;;
 
-fi
+esac

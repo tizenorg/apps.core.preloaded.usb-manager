@@ -1,2 +1,0 @@
-#USB accessory
-ACTION=="change" DEVPATH=="/devices/virtual/misc/usb_accessory", ENV{ACCESSORY}=="START" RUN+="/usr/bin/sys_event device_usb_accessory"

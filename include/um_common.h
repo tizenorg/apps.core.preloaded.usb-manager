@@ -18,11 +18,12 @@
 #ifndef __UM_COMMON_H__
 #define __UM_COMMON_H__
 
+#define _GNU_SOURCE
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <appcore-common.h>
-#include <heynoti.h>
 #include <vconf.h>
 #include <devman.h>
 #include <sys/types.h>
@@ -31,6 +32,9 @@
 #include <libusb.h>
 #include <sys/utsname.h>
 #include <pmapi.h>
+#include <assert.h>
+#include <libudev.h>
+#include <notification.h>
 #include "um_data.h"
 
 #include <errno.h>
@@ -39,40 +43,17 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 
-#define SOCK_PATH "/tmp/usb_server_sock"
-#define ACC_SOCK_PATH "/tmp/usb_acc_sock"
-#define USB_ACCESSORY_NODE "/dev/usb_accessory"
 #define SOCK_STR_LEN 1542 /* 6 elements + 5 separators + 1 NULL terminator
 				= 256 * 6 + 5 * 1 + 1 = 1542 */
-#define ACC_INFO_NUM 6
-#define HOST_INFO_NUM 5
-#define HOST_MAX_NUM 127
-
-#define VCONFKEY_SYSMAN_ADDED_STORAGE_UEVENT \
-		"memory/private/sysman/added_storage_uevent"
-#define VCONFKEY_SYSMAN_REMOVED_STORAGE_UEVENT \
-		"memory/private/sysman/removed_storage_uevent"
-
-#define PACKAGE "usb-server" /* for i18n */
-#define LOCALEDIR PREFIX"/share/locale"
-#define SYSPOPUP_PARAM_LEN 3
-#define USB_SYSPOPUP "usb-syspopup"
+#define USB_ICON_PATH PREFIX"/share/usb-server/data/usb_icon.png"
 
 #include <dlog.h>
-
-#define USB_TAG "USB_SERVER"
-
-#define USB_LOG(format, args...) \
-	LOG(LOG_DEBUG, USB_TAG, "[%s][Ln: %d] " format, (char*)(strrchr(__FILE__, '/')+1), __LINE__, ##args)
-
-#define USB_LOG_ERROR(format, args...) \
-	LOG(LOG_ERROR, USB_TAG, "[%s][Ln: %d] " format, (char*)(strrchr(__FILE__, '/')+1), __LINE__, ##args)
-
-#define __USB_FUNC_ENTER__ \
-			USB_LOG("Entering: %s()\n", __func__)
-
-#define __USB_FUNC_EXIT__ \
-			USB_LOG("Exit: %s()\n", __func__)
+#undef LOG_TAG
+#define LOG_TAG "USB_SERVER"
+#define USB_LOG(fmt, args...)         SLOGD(fmt, ##args)
+#define USB_LOG_ERROR(fmt, args...)   SLOGE(fmt, ##args)
+#define __USB_FUNC_ENTER__            USB_LOG("ENTER")
+#define __USB_FUNC_EXIT__             USB_LOG("EXIT")
 
 #define FREE(arg) \
 	do { \
@@ -107,11 +88,12 @@
 		} \
 	} while (0);
 
+int call_cmd(char* cmd);
 int check_usbclient_connection();
 int check_usbhost_connection();
 int check_storage_connection();
-int launch_usb_syspopup(UmMainData *ad, POPUP_TYPE _popup_type);
-void load_system_popup(UmMainData *ad, POPUP_TYPE _popup_type);
+int launch_usb_syspopup(UmMainData *ad, POPUP_TYPE _popup_type, void *device);
+int notice_to_client_app(int sock_remote, int request, char *answer, int answer_len);
 
 int ipc_request_server_init();
 int ipc_request_server_close(UmMainData *ad);

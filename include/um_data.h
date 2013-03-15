@@ -21,18 +21,20 @@
 #include <Ecore.h>
 #include <unistd.h>
 #include <libusb.h>
-#define ACC_ELEMENT_LEN 256
-#define HOST_ELEMENT_LEN 256
+#define DEVICE_ELEMENT_LEN 256
 #define APP_ID_LEN 1024
 #define BUF_MAX 256
 
 typedef enum {
+	USB_HOST_REF_INTERFACE = 0x0,
 	USB_HOST_CDC = 0x2,
 	USB_HOST_HID = 0x3,
 	USB_HOST_CAMERA = 0x6,
 	USB_HOST_PRINTER = 0x7,
 	USB_HOST_MASS_STORAGE = 0x8,
-	USB_HOST_HUB = 0x9
+	USB_HOST_HUB = 0x9,
+	USB_HOST_MISCELLANEOUS = 0xef,
+	USB_HOST_VENDOR_SPECIFIC = 0xff
 } USB_HOST_CLASS_SUPPORTED;
 
 typedef enum {
@@ -54,6 +56,15 @@ typedef enum {
 } USB_CONNECTION_STATUS;
 
 typedef enum {
+	USB_NOTI_ACC_ADDED = 0,
+	USB_NOTI_ACC_REMOVED,
+	USB_NOTI_HOST_ADDED,
+	USB_NOTI_HOST_REMOVED,
+	USB_NOTI_MASS_STORAGE_ADDED,
+	USB_NOTI_MASS_STORAGE_REMOVED
+} USB_NOTIFICATION_TYPE;
+
+typedef enum {
 	TICKERNOTI_ORIENTATION_TOP = 0,
 	TICKERNOTI_ORIENTATION_BOTTOM
 } TICKERNOTI_ORIENTATION;
@@ -62,13 +73,6 @@ typedef enum {
 	CHANGE_COMPLETE = 0,
 	IN_MODE_CHANGE
 } MODE_CHANGE;
-
-typedef enum {
-	SYSPOPUP_TYPE = 0,
-	MAX_NUM_SYSPOPUP_PARAM
-	/* When we need to deliver other parameters to USB-syspopup
-	 * add the types of parameters */
-} SYSPOPUP_PARAM;
 
 typedef enum {
 	ERROR_POPUP = 0,
@@ -107,7 +111,11 @@ typedef enum {
 	HAS_HOST_PERMISSION,
 	REQ_HOST_PERM_NOTI_YES_BTN,
 	REQ_HOST_PERM_NOTI_NO_BTN,
-	REQ_HOST_CONNECTION
+	REQ_HOST_CONNECTION,
+
+	/* for usb storage */
+	UNMOUNT_USB_STORAGE = 60
+
 } REQUEST_TO_USB_MANGER;
 
 typedef enum {
@@ -151,51 +159,72 @@ typedef struct _UsbAccessory {
 	char *serial;
 } UsbAccessory;
 
-typedef struct _UsbHost {
-	char					*permittedAppId;
-	int						deviceClass;
-	int						deviceSubClass;
-	int						deviceProtocol;
-	int						idVendor;
-	int						idProduct;
-	int						bus;
-	int						deviceAddress;
-} UsbHost;
+typedef struct _UsbInterface {
+	int ifClass;
+	int ifSubClass;
+	int ifProtocol;
+	int ifIdVendor;
+	int ifIdProduct;
+	int ifBus;
+	int ifAddress;
+	int ifNumber;
+	char *ifIManufacturer;
+	char *ifIProduct;
+	char *permAppId;
+} UsbInterface;
+
+typedef struct _MassStorageDevName {
+	char				*devName;
+} MSDevName;
+
+typedef struct _UsbNotification {
+	int				privId;
+	char				*title;
+	char				*content;
+	char				*iconPath;
+	int				applist;
+	char				*devName; /* for Mass storage  */
+	UsbInterface			*devIf; /* for usb host interface except Mass storage */
+	UsbAccessory			*accDev; /* for usb accessory device */
+
+} UsbNotification;
 
 typedef struct _UmMainData {
 	Ecore_Fd_Handler		*ipcRequestServerFdHandler;
-	int						server_sock_local;
-	int						server_sock_remote;
+	int				serverSock;
 
-	int						usb_noti_fd;
-	int 					acc_noti_fd;
-	int 					host_add_noti_fd;
-	int						host_remove_noti_fd;
-	int 					keyboard_add_noti_fd;
-	int						keyboard_remove_noti_fd;
-	int						mouse_add_noti_fd;
-	int						mouse_remove_noti_fd;
-	int						camera_add_noti_fd;
-	int						camera_remove_noti_fd;
+	UsbAccessory			*usbAcc;
+	char				*permAccAppId;
+	char				*launchedApp;
 
-	UsbAccessory 			*usbAcc;
-	UsbHost 				*usbHost;
-	char 					*permittedPkgForAcc;
-	char 					*launchedApp;
-
-	libusb_context 			*usbctx;
-	GList					*devList;
-	GList					*defaultDevList;
+	libusb_context			*usbctx;
+	GList				*devList;
+	GList				*defaultDevList;
+	GList				*devMSList;
+	Ecore_Timer			*addHostTimer;
+	Ecore_Timer			*rmHostTimer;
+	bool				tmpfsMounted;
 
 	/* System status */
-	USB_DRIVER_VERSION 		driverVersion;
-	int						isHostOrClient;
+	USB_DRIVER_VERSION		driverVersion;
+	int				isHostOrClient;
 
 	/* USB connection */
 #ifndef SIMULATOR
 	bool				curDebugMode;
 	bool				prevDebugMode;
 #endif
+
+	/* Notification */
+	GList				*notiAccList; /* Accessory device */
+	GList				*notiHostList; /* Host device */
+	GList				*notiMSList; /* Mass storage device */
+
+	/* Uevent monitoring */
+	Ecore_Fd_Handler		*udevFdHandler;
+	struct udev_monitor		*udevMon;
+	struct udev			*udev;
+	int				udevFd;
 
 } UmMainData;
 

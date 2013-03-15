@@ -20,16 +20,37 @@
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <aul.h>
 
-int getAccessoryInfo(UsbAccessory *usbAcc)
+#define USB_ACCESSORY_NODE "/dev/usb_accessory"
+
+static void show_cur_accessory(UsbAccessory *acc)
 {
 	__USB_FUNC_ENTER__;
-	if (!usbAcc) return -1;
+	assert(acc);
 
-	int acc = open(USB_ACCESSORY_NODE, O_RDONLY);
+	/* Get current accessory */
+	USB_LOG("** USB Accessory Info **");
+	USB_LOG("Manufacturer: %s", acc->manufacturer);
+	USB_LOG("Model       : %s", acc->model);
+	USB_LOG("Description : %s", acc->description);
+	USB_LOG("Version     : %s", acc->version);
+	USB_LOG("Uri         : %s", acc->uri);
+	USB_LOG("Serial      : %s", acc->serial);
+	USB_LOG("************************");
+	__USB_FUNC_EXIT__;
+}
+
+static int get_accessory_info(UsbAccessory *usbAcc)
+{
+	__USB_FUNC_ENTER__;
+	assert(usbAcc);
+	int acc;
+	char buf[DEVICE_ELEMENT_LEN];
+
+	acc = open(USB_ACCESSORY_NODE, O_RDONLY);
 	um_retvm_if(acc < 0, -1, "FAIL: open(USB_ACCESSORY_NODE, O_RDONLY)");
 
-	char buf[ACC_ELEMENT_LEN];
 	ioctl(acc, USB_ACCESSORY_GET_MANUFACTURER, buf);
 	usbAcc->manufacturer = strdup(buf);
 	ioctl(acc, USB_ACCESSORY_GET_MODEL, buf);
@@ -49,56 +70,54 @@ int getAccessoryInfo(UsbAccessory *usbAcc)
 	return 0;
 }
 
-int accessoryAttached(UmMainData *ad)
+static int accessory_attached(UmMainData *ad)
 {
 	__USB_FUNC_ENTER__;
-	if (!ad) return -1;
-	//load_system_popup(ad, SELECT_PKG_FOR_ACC_POPUP);
+	assert(ad);
+	assert(ad->usbAcc);
+	/* TODO
+	 * Manifest should be used to find all related apps for usb accessory */
+	/*
+	int ret;
+
+	ret = launch_usb_syspopup(ad, SELECT_PKG_FOR_ACC_POPUP, ad->usbAcc);
+	if (0 > ret) {
+		USB_LOG("FAIL: launch_usb_syspopup(SELECT_PKG_FOR_ACC_POPUP)");
+		return -1;
+	}
+	*/
+
 	__USB_FUNC_EXIT__;
 	return 0;
 }
 
-int connectAccessory(UmMainData *ad)
+static int connect_accessory(UmMainData *ad)
 {
 	__USB_FUNC_ENTER__;
-	if (!ad) return -1;
-	int ret = -1;
-	ret = getAccessoryInfo(ad->usbAcc);
+	assert(ad);
+	int ret;
+
+	ret = get_accessory_info(ad->usbAcc);
 	um_retvm_if(0 != ret, -1, "FAIL: getAccessoryInfo(ad->usbAcc)");
-	getCurrentAccessory(ad);
+
+	show_cur_accessory(ad->usbAcc);
 
 	/* Change usb mode to accessory mode */
-	ret = vconf_set_int(VCONFKEY_SETAPPL_USB_SEL_MODE_INT, SETTING_USB_ACCESSORY_MODE);
-	um_retvm_if(0 != ret, -1, "FAIL: vconf_set_int(VCONFKEY_SETAPPL_USB_SEL_MODE_INT)");
-	
-	ret = accessoryAttached(ad);
+	ret = vconf_set_int(VCONFKEY_USB_SEL_MODE, SET_USB_ACCESSORY);
+	um_retvm_if(0 != ret, -1, "FAIL: vconf_set_int(USB_SEL_MODE, ACCESSORY)");
+
+	ret = accessory_attached(ad);
 	um_retvm_if(0 > ret, -1, "FAIL: accessoryAttached(ad);");
 
 	__USB_FUNC_EXIT__;
 	return 0;
 }
 
-int loadURIForAccessory(UsbAccessory *usbAcc)
+int load_uri_for_accessory(UsbAccessory *usbAcc)
 {
 	__USB_FUNC_ENTER__;
-	if (!usbAcc) return -1;
-/*	service_h service_handle = NULL;
-	if (service_create(&service_handle) < 0) {
-		USB_LOG("FAIL: service_create(&service_handle)");
-		return -1;
-	}
-	um_retvm_if (!service_handle, -1, "service_handle");
-	if (service_set_operation(service_handle, "http://tizen.org/appsvc/operation/view") < 0) {
-		USB_LOG("FAIL: service_set_operation(service_handle, http://tizen.org/appsvc/operation/view)");
-		service_destroy(service_handle);
-		return -1;
-	}
-	if (service-set_uri(servoce_handle, usbAcc->uri) < 0) {
-		USB_LOG("FAIL: service-set_uri(servoce_handle, usbAcc->uri)");	
-		service_destroy(service_handle);
-		return -1;
-	}
-	service_destroy(service_handle);*/
+	assert(usbAcc);
+	/* TODO When unknown USB accessory is connected, URI should be shown */
 	bundle *bd = bundle_create();
 	um_retvm_if(NULL == bd, -1, "FAIL: bundle_create()");
 	appsvc_set_operation(bd, APPSVC_OPERATION_VIEW);
@@ -111,18 +130,21 @@ int loadURIForAccessory(UsbAccessory *usbAcc)
 	return 0;
 }
 
-int grantAccessoryPermission(UmMainData *ad, char *appId)
+int grant_accessory_permission(UmMainData *ad, char *appId)
 {
 	__USB_FUNC_ENTER__;
-	if (!ad) return -1;
-	if (!appId) return -1;
+	assert(ad);
+	assert(appId);
 
-	if (ad->permittedPkgForAcc != NULL) {
-		USB_LOG("Previous permitted pkg is removed\n");
+	FREE(ad->permAccAppId);
+
+	ad->permAccAppId = strdup(appId);
+	if (!(ad->permAccAppId)) {
+		USB_LOG("FAIL: strdup()");
+		return -1;
 	}
-	FREE(ad->permittedPkgForAcc);
-	ad->permittedPkgForAcc = strdup(appId);
-	USB_LOG("Permitted pkg for accessory is %s\n", ad->permittedPkgForAcc);
+
+	USB_LOG("Permitted App id for accessory is %s", ad->permAccAppId);
 	__USB_FUNC_EXIT__;
 	return 0;
 }
@@ -130,87 +152,116 @@ int grantAccessoryPermission(UmMainData *ad, char *appId)
 int launch_acc_app(char *appId)
 {
 	__USB_FUNC_ENTER__;
-	if (appId == NULL) return -1;
-	bundle *b = NULL;
+	assert(appId);
+
+	bundle *b;
+	int ret;
+
 	b = bundle_create();
-	um_retvm_if(!b, -1, "FAIL: bundle_create()"); 
-	int ret = aul_launch_app(appId, b);
-	bundle_free(b);
-	um_retvm_if(0 > ret, -1, "FAIL: aul_launch_app(appId, b)");
+	um_retvm_if(!b, -1, "FAIL: bundle_create()");
+
+	ret = aul_launch_app(appId, b);
+	if (0 > ret) {
+		USB_LOG("FAIL: aul_launch_app(appId, b)");
+		if (0 > bundle_free(b))
+			USB_LOG("FAIL: bundle_free(b)");
+		return -1;
+	}
+
+	if (0 > bundle_free(b))
+		USB_LOG("FAIL: bundle_free(b)");
 	__USB_FUNC_EXIT__;
 	return 0;
 }
 
-Eina_Bool hasAccPermission(UmMainData *ad, char *appId)
+bool has_accessory_permission(UmMainData *ad, char *appId)
 {
 	/* Check whether or not a package has permission to access to device/accessory */
 	__USB_FUNC_ENTER__;
-	if (!ad) return EINA_FALSE;
-	if (ad->permittedPkgForAcc && appId) {
-		if (!strncmp(ad->permittedPkgForAcc, appId, strlen(appId))) {
+	assert(ad);
+	assert(appId);
+	if (ad->permAccAppId) {
+		if (!strncmp(ad->permAccAppId, appId, strlen(appId))) {
 			__USB_FUNC_EXIT__;
-			return EINA_TRUE;
+			return true;
 		}
 	}
 	__USB_FUNC_EXIT__;
-	return EINA_FALSE;
+	return false;
 }
 
-static int usbAccessoryRelease(UmMainData *ad)
+void accessory_info_init(UmMainData *ad)
 {
 	__USB_FUNC_ENTER__;
-	if (!ad) return -1;
-	if (ad->usbAcc == NULL) return -1;
-	FREE(ad->usbAcc->manufacturer);
-	FREE(ad->usbAcc->version);
-	FREE(ad->usbAcc->description);
-	FREE(ad->usbAcc->model);
-	FREE(ad->usbAcc->uri);
-	FREE(ad->usbAcc->serial);
-	FREE(ad->permittedPkgForAcc);
+	assert(ad);
 
-	__USB_FUNC_EXIT__;
-	return 0;
-}
+	ad->permAccAppId = NULL;
 
-void umAccInfoInit(UmMainData *ad)
-{
-	__USB_FUNC_ENTER__;
-	if (!ad) return ;
-	if (ad->usbAcc == NULL) return;
+	if (!(ad->usbAcc)) return;
+
 	ad->usbAcc->manufacturer = NULL;
 	ad->usbAcc->version = NULL;
 	ad->usbAcc->description = NULL;
 	ad->usbAcc->model = NULL;
 	ad->usbAcc->uri = NULL;
 	ad->usbAcc->serial = NULL;
-	ad->permittedPkgForAcc = NULL;
 
 	__USB_FUNC_EXIT__;
 }
 
-int disconnectAccessory(UmMainData *ad)
+void disconnect_accessory(UmMainData *ad)
 {
 	__USB_FUNC_ENTER__;
-	if (!ad) return -1;
-	usbAccessoryRelease(ad);
+	assert(ad);
+
+	FREE(ad->permAccAppId);
+
+	if (!(ad->usbAcc)) return;
+
+	FREE(ad->usbAcc->manufacturer);
+	FREE(ad->usbAcc->version);
+	FREE(ad->usbAcc->description);
+	FREE(ad->usbAcc->model);
+	FREE(ad->usbAcc->uri);
+	FREE(ad->usbAcc->serial);
+
 	__USB_FUNC_EXIT__;
-	return 0;
 }
 
-void getCurrentAccessory(UmMainData *ad)
+void um_uevent_usb_accessory_added(UmMainData *ad)
 {
 	__USB_FUNC_ENTER__;
-	if (!ad) return ;
-	if (!(ad->usbAcc)) return ;
-	/* Get current accessory */
-	USB_LOG("** USB Accessory Info **\n");
-	USB_LOG("Manufacturer: %s\n", ad->usbAcc->manufacturer);
-	USB_LOG("Model       : %s\n", ad->usbAcc->model);
-	USB_LOG("Description : %s\n", ad->usbAcc->description);
-	USB_LOG("Version     : %s\n", ad->usbAcc->version);
-	USB_LOG("Uri         : %s\n", ad->usbAcc->uri);
-	USB_LOG("Serial      : %s\n", ad->usbAcc->serial);
-	USB_LOG("************************\n");
+	assert(ad);
+
+	int status;
+	int ret;
+
+	status = check_usbclient_connection();
+	if (USB_CLIENT_CONNECTED != status)
+		return;
+
+	ret = vconf_get_int(VCONFKEY_USB_ACCESSORY_STATUS, &status);
+	if (0 != ret) {
+		USB_LOG("FAIL: vconf_get_int(VCONFKEY_USB_ACCESSORY_STATUS)");
+		return;
+	}
+
+	if (VCONFKEY_USB_ACCESSORY_STATUS_DISCONNECTED != status) {
+		__USB_FUNC_EXIT__;
+		return;
+	}
+
+	ret = connect_accessory(ad);
+	if (ret != 0) {
+		USB_LOG("FAIL: connect_accessory(ad)");
+		return ;
+	}
+
+	ret = vconf_set_int(VCONFKEY_USB_ACCESSORY_STATUS,
+			VCONFKEY_USB_ACCESSORY_STATUS_CONNECTED);
+	if (ret != 0)
+		USB_LOG("FAIL: vconf_set_int(VCONFKEY_USB_ACCESSORY_STATUS)");
+
 	__USB_FUNC_EXIT__;
 }
+

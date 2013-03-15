@@ -15,33 +15,35 @@
  * limitations under the License.
  */
 
+#ifndef __UM_USB_HOST_MANAGER_H__
+#define __UM_USB_HOST_MANAGER_H__
+
 #include <vconf.h>
 #include <sys/mount.h>
 #include <mntent.h>
 #include <string.h>
 #include "um_customize.h"
+#include "um_usb_notification.h"
 
 #define MTAB_FILE       "/etc/mtab"
 #define MOUNT_POINT     "/opt/storage/usb"
 
-
-
-int umGetDeviceInfo(UmMainData *ad);
+int um_get_device_info(UmMainData *ad);
 void destroy_device(gpointer data);
-int umReleaseAllDevice(UmMainData *ad);
 void usb_host_added_cb(UmMainData *ad);
 void usb_host_removed_cb(UmMainData *ad);
 int find_host_fd(UmMainData *ad, char *appId);
-int grantHostPermission(UmMainData *ad, char *appId, int vendor, int product);
+int grant_host_permission(UmMainData *ad, char *appId, int vendor, int product);
 int launch_host_app(char *appId);
-Eina_Bool hasHostPermission(UmMainData *ad, char *appId, int vendor, int product);
-int show_all_usb_devices(GList *devList, int option);
-void free_func(gpointer data);
-static int um_usb_storage_added();
-static int um_usb_storage_removed();
-int disconnectUsbHost(UmMainData *ad);
+Eina_Bool has_host_permission(UmMainData *ad, char *appId, int vendor, int product);
+void disconnect_usb_host(UmMainData *ad);
+void show_all_usb_devices(GList *devList);
+Eina_Bool is_host_connected(UmMainData *ad, int vendor, int product);
+bool is_mass_storage_mounted(UmMainData *ad, char *devname);
 
-void add_host_noti_cb(void *data);
-void remove_host_noti_cb(void *data);
-void add_mass_storage_cb(keynode_t *in_key, void *data);
-void remove_mass_storage_cb(keynode_t *in_key, void *data);
+void um_uevent_usb_host_added(UmMainData *ad);
+void um_uevent_usb_host_removed(UmMainData *ad);
+void um_uevent_mass_storage_added(UmMainData *ad, char *devname, char *fstype);
+void um_uevent_mass_storage_removed(UmMainData *ad, char *devname);
+
+#endif /* __UM_USB_HOST_MANAGER_H__ */

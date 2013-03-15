@@ -1,9 +1,9 @@
 Name:       usb-server
 Summary:    USB server
-Version:    0.0.11
+Version:    0.0.24
 Release:    1
-Group:      framework-system
-License:    APLv2
+Group:      framework/system
+License:    Apache License, Version 2.0
 Source0:    usb-server-%{version}.tar.gz
 Source1:    usb-server.manifest
 
@@ -12,7 +12,6 @@ BuildRequires:  libattr-devel
 BuildRequires:  gettext-devel
 BuildRequires:  pkgconfig(appcore-common)
 BuildRequires:  pkgconfig(ecore)
-BuildRequires:  pkgconfig(heynoti)
 BuildRequires:  pkgconfig(vconf)
 BuildRequires:  pkgconfig(devman)
 BuildRequires:  pkgconfig(dlog)
@@ -20,6 +19,9 @@ BuildRequires:  pkgconfig(syspopup-caller)
 BuildRequires:  pkgconfig(pmapi)
 BuildRequires:  pkgconfig(appsvc)
 BuildRequires:  pkgconfig(libusb-1.0)
+BuildRequires:  pkgconfig(notification)
+BuildRequires:  pkgconfig(libudev)
+BuildRequires:  pkgconfig(edbus)
 BuildRequires:  pkgconfig(capi-system-usb-accessory)
 
 %description
@@ -48,15 +50,9 @@ rm -rf %{buildroot}
 
 vconftool set -t int memory/usb/mass_storage_status "0" -u 0 -i -f
 vconftool set -t int memory/usb/accessory_status "0" -u 5000 -i -f
-vconftool set -t int db/usb/keep_ethernet "0" -f
-vconftool set -t int memory/usb/libusb_status "0" -f
-
-heynotitool set device_usb_accessory
-
-mkdir -p /etc/udev/rules.d
-if ! [ -L /etc/udev/rules.d/91-usb-server.rules ]; then
-	ln -s /usr/share/usb-server/udev-rules/91-usb-server.rules /etc/udev/rules.d/91-usb-server.rules
-fi
+vconftool set -t int memory/usb/cur_mode "0" -u 0 -i -f
+vconftool set -t int db/usb/sel_mode "1" -f
+vconftool set -t int memory/usb/libusb_status "0" -u 0 -i -f
 
 
 %files
@@ -65,5 +61,6 @@ fi
 /usr/bin/start_dr.sh
 /usr/bin/usb-server
 %attr(440,root,root) /usr/share/locale/*/LC_MESSAGES/usb-server.mo
-%attr(440,root,root) /usr/share/usb-server/udev-rules/91-usb-server.rules
+/usr/bin/direct_set_debug.sh
 /usr/bin/set_usb_debug.sh
+%attr(440,app,app) /usr/share/usb-server/data/usb_icon.png

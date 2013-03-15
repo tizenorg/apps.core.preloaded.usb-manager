@@ -15,16 +15,13 @@
  * limitations under the License.
  */
 
-#ifndef __UM_USB_SERVER_H__
-#define __UM_USB_SERVER_H__
+#ifndef __UM_USB_UEVENT_HANDLER_H__
+#define __UM_USB_UEVENT_HANDLER_H__
 
-#include <vconf.h>
-#include "um_usb_accessory_manager.h"
-#include "um_usb_connection_manager.h"
 #include "um_usb_host_manager.h"
-#include "um_usb_uevent_handler.h"
+#include "um_usb_accessory_manager.h"
 
-void um_signal_init();
-int um_usb_server_init();
+int um_uevent_control_start(UmMainData *ad, int mode);
+void um_uevent_control_stop(UmMainData *ad);
 
-#endif /* __UM_USB_SERVER_H__ */
+#endif /* __UM_UEVENT_HANDLER_H__ */

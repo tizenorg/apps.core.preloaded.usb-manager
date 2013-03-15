@@ -15,18 +15,15 @@
  * limitations under the License.
  */
 
+#include <sys/file.h>
 #include "um_main.h"
-#include <heynoti.h>
 
-static void fini(UmMainData *ad)
-{
-	__USB_FUNC_ENTER__;
-	__USB_FUNC_EXIT__;
-}
+#define LOCK_USB_MANAGER "/tmp/lock_usb_manager"
 
 static void usb_server_init(UmMainData *ad)
 {
 	__USB_FUNC_ENTER__;
+	assert(ad);
 	um_signal_init();
 	appcore_set_i18n(PACKAGE, LOCALEDIR);
 	um_usb_server_init(ad);
@@ -42,15 +39,10 @@ static int usb_server_main(int argc, char **argv)
 	ecore_init();
 
 	usb_server_init(&ad);
-	if (USB_DEVICE_CLIENT == ad.isHostOrClient) {
-		ad.usbAcc = (UsbAccessory*)malloc(sizeof(UsbAccessory));
-	}
 
 	ecore_main_loop_begin();
 
-	fini(&ad);
 	ecore_shutdown();
-	FREE(ad.usbAcc);
 
 	if (USB_DEVICE_HOST == ad.isHostOrClient) {
 		if (USB_HOST_CONNECTED == check_usbhost_connection())
@@ -64,14 +56,75 @@ static int usb_server_main(int argc, char **argv)
 	return 0;
 }
 
+static int um_lock_usb_manager(void)
+{
+	__USB_FUNC_ENTER__ ;
+	int fd;
+	int ret;
+
+	fd = open(LOCK_USB_MANAGER, O_CREAT | O_RDWR | O_CLOEXEC, 0600);
+	if (fd == -1) {
+		USB_LOG("FAIL: open(%s)", LOCK_USB_MANAGER);
+		return -1;
+	}
+
+	ret = flock(fd, LOCK_EX | LOCK_NB);
+	if (ret == -1) {
+		USB_LOG("FAIL: flock(fd, LOCK_EX | LOCK_NB), errno: %d", errno);
+		close(fd);
+		return -1;
+	}
+
+	__USB_FUNC_EXIT__ ;
+	return fd;
+}
+
+static int um_unlock_usb_manager(int fd)
+{
+	__USB_FUNC_ENTER__ ;
+	int ret;
+
+	if (fd == -1) return -1;
+
+	ret = flock(fd, LOCK_UN);
+	if (ret == -1) {
+		USB_LOG("FAIL: flock(fd, LOCK_UN)");
+		close(fd);
+		return -1;
+	}
+	close(fd);
+
+	__USB_FUNC_EXIT__ ;
+	return 0;
+}
+
+
 static int elm_main(int argc, char **argv)
 {
 	__USB_FUNC_ENTER__;
-	int ret = 0;
+	int ret;
+	int fd;
+
+	fd = um_lock_usb_manager();
+	if (fd == -1) {
+		USB_LOG("FAIL: um_lock_usb_manager()");
+		return -1;
+	}
+
+	if (pm_lock_state(LCD_OFF, STAY_CUR_STATE, 0) != 0)
+		USB_LOG("FAIL: pm_lock_state(LCD_OFF, STAY_CUR_STATE)");
+
 	while(1) {
 		ret = usb_server_main(argc, argv);
 		if (ret == 0) break;
 	}
+
+	if (pm_unlock_state(LCD_OFF, STAY_CUR_STATE) != 0)
+		USB_LOG("FAIL:pm_unlock_state(LCD_OFF, STAY_CUR_STATE)");
+
+	ret = um_unlock_usb_manager(fd);
+	if (ret < 0) USB_LOG("FAIL: um_unlock_usb_manager(fd)");
+
 	__USB_FUNC_EXIT__;
 	return 0;
 }

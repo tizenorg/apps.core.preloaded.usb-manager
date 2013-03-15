@@ -19,6 +19,27 @@
 #include <devman.h>
 #include "um_common.h"
 
+#define SOCK_PATH        "/tmp/usb_server_sock"
+#define ACC_SOCK_PATH    "/tmp/usb_acc_sock"
+
+#define USB_SYSPOPUP     "usb-syspopup"
+#define SYSPOPUP_TYPE    "_SYSPOPUP_TYPE"
+
+#define ACC_MANUFACTURER "_ACC_MANUFACTURER"
+#define ACC_MODEL        "_ACC_MODEL"
+#define ACC_DESCRIPTION  "_ACC_DESCRIPTION"
+#define ACC_VERSION      "_ACC_VERSION"
+#define ACC_URI          "_ACC_URI"
+#define ACC_SERIAL       "_ACC_SERIAL"
+
+#define HOST_CLASS       "_HOST_CLASS"
+#define HOST_SUBCLASS    "_HOST_SUBCLASS"
+#define HOST_PROTOCOL    "_HOST_PROTOCOL"
+#define HOST_IDVENDOR    "_HOST_IDVENDOR"
+#define HOST_IDPRODUCT   "_HOST_IDPRODUCT"
+
+#define LAUNCH_RETRY 10
+
 int check_usbclient_connection()
 {
 	__USB_FUNC_ENTER__ ;
@@ -49,133 +70,165 @@ int check_usbhost_connection()
 	return USB_HOST_DISCONNECTED;
 }
 
-int launch_usb_syspopup(UmMainData *ad, POPUP_TYPE _popup_type)
+static int add_acc_element_to_bundle(bundle *b, void *device)
 {
 	__USB_FUNC_ENTER__ ;
-	if (!ad) return -1;
-	int ret = -1;
-	char syspopup_key[SYSPOPUP_PARAM_LEN];
-	char syspopup_value[ACC_ELEMENT_LEN];
+	assert(b);
+	assert(device);
 
-	bundle *b = NULL;
-	b = bundle_create();
-	um_retvm_if (!b, -1, "FAIL: bundle_create()\n");
+	int ret;
+	UsbAccessory *usbAcc = (UsbAccessory *)device;
 
-	snprintf(syspopup_key, SYSPOPUP_PARAM_LEN, "%d", SYSPOPUP_TYPE);
-	snprintf(syspopup_value, ACC_ELEMENT_LEN, "%d", _popup_type);
-	ret = bundle_add(b, syspopup_key, syspopup_value);
+	if (!(usbAcc->manufacturer) || !(usbAcc->model) || !(usbAcc->description)
+		|| !(usbAcc->version) || !(usbAcc->uri) || !(usbAcc->serial)) {
+		USB_LOG("ERROR: Input parameters are NULL");
+		return -1;
+	}
+
+	ret = bundle_add(b, ACC_MANUFACTURER, usbAcc->manufacturer);
 	if (0 != ret) {
-		USB_LOG("FAIL: bundle_add()\n");
-		if (0 != bundle_free(b)) USB_LOG("FAIL: bundle_free()\n");
+		USB_LOG("FAIL: bundle_add(%s)", ACC_MANUFACTURER);
 		return -1;
 	}
-
-	if (SELECT_PKG_FOR_ACC_POPUP == _popup_type) {
-		int i;
-		char device[ACC_INFO_NUM][ACC_ELEMENT_LEN];
-		snprintf(device[ACC_MANUFACTURER], ACC_ELEMENT_LEN, "%s", ad->usbAcc->manufacturer);
-		snprintf(device[ACC_MODEL], ACC_ELEMENT_LEN, "%s", ad->usbAcc->model);
-		snprintf(device[ACC_DESCRIPTION], ACC_ELEMENT_LEN, "%s", ad->usbAcc->description);
-		snprintf(device[ACC_VERSION], ACC_ELEMENT_LEN, "%s", ad->usbAcc->version);
-		snprintf(device[ACC_URI], ACC_ELEMENT_LEN, "%s", ad->usbAcc->uri);
-		snprintf(device[ACC_SERIAL], ACC_ELEMENT_LEN, "%s", ad->usbAcc->serial);
-		for ( i = 0; i < ACC_INFO_NUM ; i++) {
-			snprintf(syspopup_key, SYSPOPUP_PARAM_LEN, "%d", 1 + i);
-			snprintf(syspopup_value, ACC_ELEMENT_LEN, "%s", device[i]);
-			USB_LOG("key: %s, value: %s\n", syspopup_key, syspopup_value);
-			ret = bundle_add(b, syspopup_key, syspopup_value);
-			if (0 != ret) {
-				USB_LOG("FAIL: bundle_add()\n");
-				if (0 != bundle_free(b)) USB_LOG("FAIL: bundle_free()\n");
-				return -1;
-			}
-		}
-	}
-
-	ret = syspopup_launch(USB_SYSPOPUP, b);
-	if (0 > ret) {
-		USB_LOG("FAIL: syspopup_launch() returns %d\n", ret);
-		if (0 != bundle_free(b)) USB_LOG("FAIL: bundle_free()\n");
+	ret = bundle_add(b, ACC_MODEL, usbAcc->model);
+	if (0 != ret) {
+		USB_LOG("FAIL: bundle_add(%s)", ACC_MODEL);
 		return -1;
 	}
-
-	ret = bundle_free(b);
-	um_retvm_if (0 != ret, -1, "FAIL: bundle_free()\n");
+	ret = bundle_add(b, ACC_DESCRIPTION, usbAcc->description);
+	if (0 != ret) {
+		USB_LOG("FAIL: bundle_add(%s)", ACC_DESCRIPTION);
+		return -1;
+	}
+	ret = bundle_add(b, ACC_VERSION, usbAcc->version);
+	if (0 != ret) {
+		USB_LOG("FAIL: bundle_add(%s)", ACC_VERSION);
+		return -1;
+	}
+	ret = bundle_add(b, ACC_URI, usbAcc->uri);
+	if (0 != ret) {
+		USB_LOG("FAIL: bundle_add(%s)", ACC_URI);
+		return -1;
+	}
+	ret = bundle_add(b, ACC_SERIAL, usbAcc->serial);
+	if (0 != ret) {
+		USB_LOG("FAIL: bundle_add(%s)", ACC_SERIAL);
+		return -1;
+	}
 
 	__USB_FUNC_EXIT__ ;
 	return 0;
 }
 
-void load_system_popup(UmMainData *ad, POPUP_TYPE _popup_type)
+static int add_integer_to_bundle(bundle *b, char *key, int value)
 {
 	__USB_FUNC_ENTER__ ;
-	if (!ad) return ;
-	int ret = -1;
-	ret = launch_usb_syspopup(ad, _popup_type);
-	if (0 != ret) {
-		USB_LOG("FAIL: launch_usb_syspopup(_popup_type)\n");
+	assert(b);
+	assert(key);
+
+	int ret;
+	char str[DEVICE_ELEMENT_LEN];
+
+	ret = snprintf(str, sizeof(str), "%d", value);
+	if (0 > ret) {
+		USB_LOG("FAIL: snprintf(): %d", ret);
+		return -1;
 	}
+	ret = bundle_add(b, key, str);
+	if (0 != ret) {
+		USB_LOG("FAIL: bundle_add(%s)", str);
+		return -1;
+	}
+
 	__USB_FUNC_EXIT__ ;
+	return 0;
 }
 
-int load_system_popup_with_deviceinfo(UmMainData *ad,
-										POPUP_TYPE _popup_type,
-										int class,
-										int subClass,
-										int protocol,
-										int vendor,
-										int product)
+static int add_host_element_to_bundle(bundle *b, void *device)
 {
 	__USB_FUNC_ENTER__ ;
-	if (!ad) return -1;
-	int ret = -1;
-	char syspopup_key[SYSPOPUP_PARAM_LEN];
-	char syspopup_value[ACC_ELEMENT_LEN];
+	assert(b);
+	assert(device);
+
+	int ret;
+	UsbInterface *devIf = (UsbInterface *)device;
+
+	ret = add_integer_to_bundle(b, HOST_CLASS, devIf->ifClass);
+	if (0 > ret) {
+		USB_LOG("FAIL: add_integer_to_bundle(): %d", ret);
+		return -1;
+	}
+	ret = add_integer_to_bundle(b, HOST_SUBCLASS, devIf->ifSubClass);
+	if (0 > ret) {
+		USB_LOG("FAIL: add_integer_to_bundle(): %d", ret);
+		return -1;
+	}
+	ret = add_integer_to_bundle(b, HOST_PROTOCOL, devIf->ifProtocol);
+	if (0 > ret) {
+		USB_LOG("FAIL: add_integer_to_bundle(): %d", ret);
+		return -1;
+	}
+	ret = add_integer_to_bundle(b, HOST_IDVENDOR, devIf->ifIdVendor);
+	if (0 > ret) {
+		USB_LOG("FAIL: add_integer_to_bundle(): %d", ret);
+		return -1;
+	}
+	ret = add_integer_to_bundle(b, HOST_IDPRODUCT, devIf->ifIdProduct);
+	if (0 > ret) {
+		USB_LOG("FAIL: add_integer_to_bundle(): %d", ret);
+		return -1;
+	}
+
+	__USB_FUNC_EXIT__ ;
+	return 0;
+}
+
+int launch_usb_syspopup(UmMainData *ad, POPUP_TYPE popupType, void *device)
+{
+	__USB_FUNC_ENTER__ ;
+	assert(ad);
+	int i;
+	int ret;
+	char type[DEVICE_ELEMENT_LEN];
 
 	bundle *b = NULL;
 	b = bundle_create();
-	um_retvm_if (!b, -1, "FAIL: bundle_create()\n");
+	um_retvm_if (!b, -1, "FAIL: bundle_create()");
 
-	snprintf(syspopup_key, SYSPOPUP_PARAM_LEN, "%d", SYSPOPUP_TYPE);
-	snprintf(syspopup_value, ACC_ELEMENT_LEN, "%d", _popup_type);
-	ret = bundle_add(b, syspopup_key, syspopup_value);
+	snprintf(type, sizeof(type), "%d", popupType);
+	ret = bundle_add(b, SYSPOPUP_TYPE, type);
 	if (0 != ret) {
-		USB_LOG("FAIL: bundle_add()\n");
-		if (0 != bundle_free(b)) USB_LOG("FAIL: bundle_free()\n");
+		USB_LOG("FAIL: bundle_add()");
+		if (0 != bundle_free(b)) USB_LOG("FAIL: bundle_free()");
 		return -1;
 	}
 
-	if (SELECT_PKG_FOR_HOST_POPUP == _popup_type) {
-		if (ad->devList != NULL) {
-			int i;
-			char device[HOST_INFO_NUM][HOST_ELEMENT_LEN];
-			snprintf(device[HOST_CLASS - HOST_CLASS], HOST_ELEMENT_LEN, "%d", class);
-			snprintf(device[HOST_SUBCLASS - HOST_CLASS], HOST_ELEMENT_LEN, "%d", subClass);
-			snprintf(device[HOST_PROTOCOL - HOST_CLASS], HOST_ELEMENT_LEN, "%d", protocol);
-			snprintf(device[HOST_IDVENDOR - HOST_CLASS], HOST_ELEMENT_LEN, "%d", vendor);
-			snprintf(device[HOST_IDPRODUCT - HOST_CLASS], HOST_ELEMENT_LEN, "%d", product);
-			for (i = 0; i < HOST_INFO_NUM ; i++) {
-				snprintf(syspopup_key, SYSPOPUP_PARAM_LEN, "%d", HOST_CLASS + i);
-				snprintf(syspopup_value, ACC_ELEMENT_LEN, "%s", device[i]);
-				ret = bundle_add(b, syspopup_key, syspopup_value);
-				if (0 != ret) {
-					USB_LOG("FAIL: bundle_add()\n");
-					if (0 != bundle_free(b)) USB_LOG("FAIL: bundle_free()\n");
-					return -1;
-				}
-			}
-		}
+	switch (popupType) {
+	case SELECT_PKG_FOR_ACC_POPUP:
+		ret = add_acc_element_to_bundle(b, device);
+		break;
+	case SELECT_PKG_FOR_HOST_POPUP:
+		ret = add_host_element_to_bundle(b, device);
+		break;
+	default:
+		ret = 0;
+		break;
 	}
-
-	ret = syspopup_launch(USB_SYSPOPUP, b);
 	if (0 > ret) {
-		USB_LOG("FAIL: syspopup_launch() returns %d\n", ret);
-		if (0 != bundle_free(b)) USB_LOG("FAIL: bundle_free()\n");
+		USB_LOG("FAIL: add_acc/host_element_to_bundle()");
+		if (0 != bundle_free(b)) USB_LOG("FAIL: bundle_free()");
 		return -1;
 	}
+
+	i = 0;
+	do {
+		ret = syspopup_launch(USB_SYSPOPUP, b);
+		if (0 <= ret) break;
+		USB_LOG("FAIL: syspopup_launch() returns %d", ret);
+	} while (i++ < LAUNCH_RETRY);
 
 	ret = bundle_free(b);
-	um_retvm_if (0 != ret, -1, "FAIL: bundle_free()\n");
+	um_retvm_if (0 != ret, -1, "FAIL: bundle_free()");
 
 	__USB_FUNC_EXIT__ ;
 	return 0;
@@ -184,30 +237,33 @@ int load_system_popup_with_deviceinfo(UmMainData *ad,
 int ipc_request_server_init()
 {
 	__USB_FUNC_ENTER__ ;
-	int len, t;
 	int sockFd = -1;
 	struct sockaddr_un local;
 
 	if ((sockFd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
-		perror("socket");
-		USB_LOG("FAIL: socket(AF_UNIX, SOCK_STREAM, 0)");
+		USB_LOG("FAIL: socket()");
 		return -1;
 	}
 	local.sun_family = AF_UNIX;
 	strncpy(local.sun_path, SOCK_PATH, strlen(SOCK_PATH)+1);
 	unlink(local.sun_path);
-	len = strlen(local.sun_path) + sizeof(local.sun_family);
 
-	if (bind(sockFd, (struct sockaddr *)&local, len) == -1) {
-		perror("bind");
-		USB_LOG("FAIL: bind((*sock_local), (struct sockaddr *)&local, len)");
+	if (bind(sockFd, (struct sockaddr *)&local, sizeof(local)) == -1) {
+		USB_LOG("FAIL: bind()");
 		close(sockFd);
 		return -1;
 	}
-	chown(SOCK_PATH, 5000, 5000);
-	chmod(SOCK_PATH, 0777);
+	if (0 != chown(SOCK_PATH, 5000, 5000)) {
+		USB_LOG("FAIL: chown(%s, 5000, 5000)", SOCK_PATH);
+		close(sockFd);
+		return -1;
+	}
+	if (0 != chmod(SOCK_PATH, 0777)) {
+		USB_LOG("FAIL: chmod(%s, 0777)", SOCK_PATH);
+		close(sockFd);
+		return -1;
+	}
 	if (listen(sockFd, 5) == -1) {
-		perror("listen");
 		USB_LOG("FAIL: listen((*sock_local), 5)");
 		close(sockFd);
 		return -1;
@@ -216,75 +272,50 @@ int ipc_request_server_init()
 	return sockFd;
 }
 
-int ipc_request_server_close(UmMainData *ad)
-{
-	__USB_FUNC_ENTER__ ;
-	if (ad->server_sock_local > 0)
-		close(ad->server_sock_local);
-	if (ad->server_sock_remote > 0)
-		close(ad->server_sock_remote);
-	__USB_FUNC_EXIT__ ;
-	return 0;
-}
-
-
 /* This function initializes socket for ipc with usb-server */
 int ipc_noti_server_init()
 {
 	__USB_FUNC_ENTER__ ;
-	int len;
-	int sock_remote;
+	int sockFd;
 	struct sockaddr_un remote;
-	if ((sock_remote = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
-		perror("socket");
-		USB_LOG("FAIL: socket(AF_UNIX, SOCK_STREAM, 0)");
+	if ((sockFd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
+		USB_LOG("FAIL: socket()");
 		return -1;
 	}
 	remote.sun_family = AF_UNIX;
 	strncpy(remote.sun_path, ACC_SOCK_PATH, strlen(SOCK_PATH)+1);
-	len = strlen(remote.sun_path) + sizeof(remote.sun_family);
 
-	if (connect(sock_remote, (struct sockaddr *)&remote, len) == -1) {
-		perror("connect");
-		USB_LOG("FAIL: connect(sock_remote, (struct sockaddr *)&remote, len)");
-		close(sock_remote);
+	if (connect(sockFd, (struct sockaddr *)&remote, sizeof(remote)) == -1) {
+		USB_LOG("FAIL: connect()");
+		close(sockFd);
 		return -1;
 	}
 	__USB_FUNC_EXIT__ ;
-	return sock_remote;
-}
-
-/* This function closes socket for ipc with usb-server */
-int ipc_noti_server_close(int *sock_remote)
-{
-	__USB_FUNC_ENTER__ ;
-	if (!sock_remote) return -1;
-	close (*sock_remote);
-	__USB_FUNC_EXIT__ ;
-	return 0;
+	return sockFd;
 }
 
 /* This function notices something to client app by ipc with socket and gets the results */
-int notice_to_client_app(int sock_remote, int request, char *answer)
+int notice_to_client_app(int sockFd, int request, char *answer, int answerLen)
 {
 	__USB_FUNC_ENTER__ ;
+	assert(answer);
 	int t;
 	char str[SOCK_STR_LEN];
 	USB_LOG("notice: %d\n", request);
 	snprintf(str, SOCK_STR_LEN, "%d", request);
-	if (send (sock_remote, str, strlen(str)+1, 0) == -1) {
-		USB_LOG("FAIL: send (sock_remote, str, strlen(str)+1, 0)\n");
+	if (send (sockFd, str, strlen(str)+1, 0) == -1) {
+		USB_LOG("FAIL: send (sockFd, str, strlen(str)+1, 0)\n");
 		return -1;
 	}
-	if ((t = recv(sock_remote, answer, SOCK_STR_LEN, 0)) > 0) {
-		if (t < SOCK_STR_LEN) {
+	if ((t = recv(sockFd, answer, answerLen, 0)) > 0) {
+		if (t < answerLen) {
 			answer[t] = '\0';
-		} else { /* t == SOCK_STR_LEN */
-			answer[SOCK_STR_LEN-1] = '\0';
+		} else { /* t == answerLen */
+			answer[answerLen-1] = '\0';
 		}
-		USB_LOG("[CLIENT] Received value: %s\n", answer);
+		USB_LOG("[CLIENT] Received value: %s", answer);
 	} else {
-		USB_LOG("FAIL: recv(sock_remote, str, SOCK_STR_LEN, 0)\n");
+		USB_LOG("FAIL: recv(sockFd, str, SOCK_STR_LEN, 0)");
 		return -1;
 	}
 	__USB_FUNC_EXIT__ ;
@@ -300,15 +331,15 @@ bool is_emul_bin()
 	if (ret < 0) {
 		__USB_FUNC_EXIT__ ;
 		return true;
-	} else {
-		USB_LOG("Machine name: %s", name.machine);
-		if (strcasestr(name.machine, "emul")) {
-			__USB_FUNC_EXIT__ ;
-			return true;
-		} else {
-			__USB_FUNC_EXIT__ ;
-			return false;
-		}
 	}
+
+	USB_LOG("Machine name: %s", name.machine);
+	if (strcasestr(name.machine, "emul")) {
+		__USB_FUNC_EXIT__ ;
+		return true;
+	}
+
+	__USB_FUNC_EXIT__ ;
+	return false;
 }
 
