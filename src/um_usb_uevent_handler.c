@@ -229,6 +229,7 @@ static int um_uevent_control_subsystem_misc(UmMainData *ad, struct udev_list_ent
 	ret = um_event_control_get_value_by_name(list_entry, UDEV_ENTRY_NAME_ACCESSORY, &accessory);
 	if (ret < 0 || !accessory) {
 		USB_LOG("FAIL: um_event_control_get_value_by_name()");
+		FREE(action);
 		FREE(accessory);
 		return -1;
 	}

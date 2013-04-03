@@ -128,6 +128,7 @@ static int get_ifs_from_device(libusb_device *device, GList **ifList)
 			USB_LOG("FAIL: malloc()");
 			libusb_free_config_descriptor(config);
 			g_list_free(*ifList);
+			return -1;
 		}
 
 		devIf->ifClass = descIf->bInterfaceClass;
@@ -467,6 +468,7 @@ static Eina_Bool um_add_usb_host_device(void *data)
 		ret = retrieve_interface_info(list[i], &ifList);
 		if (ret < 0) {
 			USB_LOG("FAIL: retrieve_interface_info()");
+			libusb_free_device_list(list, 1);
 			return -1;
 		}
 

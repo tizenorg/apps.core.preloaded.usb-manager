@@ -540,14 +540,30 @@ int get_default_usb_device(UmMainData *ad)
 	FILE *fp;
 	int ret;
 	char buf[BUF_MAX];
-	UsbInterface devIf;
+	UsbInterface *devIf;
 
+	devIf = (UsbInterface *)malloc(sizeof(UsbInterface));
+	if (!devIf) {
+		USB_LOG("FAIL: malloc()");
+		return -1;
+	}
+
+	memset(devIf, 0, sizeof(UsbInterface));
+
+	/* The file does not exist if default usb device does not exist */
 	ret = access("/tmp/usb_default", F_OK);
-	/*  The file does not exist if default usb device does not exist */
-	um_retvm_if(ret < 0, 0, "usb_default file does not exist.");
+	if(ret < 0) {
+		USB_LOG("usb_default file does not exist.");
+		FREE(devIf);
+		return 0;
+	}
 
 	fp = fopen("/tmp/usb_default", "r");
-	um_retvm_if(!fp, -1, "FAIL: fopen()");
+	if (!fp) {
+		USB_LOG("FAIL: fopen()");
+		FREE(devIf);
+		return -1;
+	}
 
 	while(fgets(buf, sizeof(buf), fp)) {
 		USB_LOG("BUF: %s", buf);
@@ -556,18 +572,18 @@ int get_default_usb_device(UmMainData *ad)
 	/* 'I' means interface descriptor which has information of class, subclass, and protocol */
 	/* 'T' means Topology of devices which has information of bus number and device address */
 		if (*buf == 'I') {
-			get_device_info_from_device_desc(buf, &devIf);
-			USB_LOG("interface number: %d, class: %d", devIf.ifNumber, devIf.ifClass);
-			USB_LOG("subclass: %d, protocol: %d", devIf.ifSubClass, devIf.ifProtocol);
+			get_device_info_from_device_desc(buf, devIf);
+			USB_LOG("interface number: %d, class: %d", devIf->ifNumber, devIf->ifClass);
+			USB_LOG("subclass: %d, protocol: %d", devIf->ifSubClass, devIf->ifProtocol);
 
 		} else if (*buf == 'T') {
-			get_device_info_from_topology_desc(buf, &devIf);
-			USB_LOG("bus: %d, devaddress: %d", devIf.ifBus, devIf.ifAddress);
+			get_device_info_from_topology_desc(buf, devIf);
+			USB_LOG("bus: %d, devaddress: %d", devIf->ifBus, devIf->ifAddress);
 			continue;
 
 		} else if (*buf == 'P') {
-			get_device_info_from_product_desc(buf, &devIf);
-			USB_LOG("vendor: %d, product: %d", devIf.ifIdVendor, devIf.ifIdProduct);
+			get_device_info_from_product_desc(buf, devIf);
+			USB_LOG("vendor: %d, product: %d", devIf->ifIdVendor, devIf->ifIdProduct);
 			continue;
 
 		} else {
@@ -575,12 +591,13 @@ int get_default_usb_device(UmMainData *ad)
 			continue;
 		}
 
-		ret = store_default_device_info(ad, &devIf);
+		ret = store_default_device_info(ad, devIf);
 		if (ret < 0) {
 			USB_LOG("FAIL: store_default_device_info()");
 		}
 	}
 
+	FREE(devIf);
 	fclose(fp);
 	USB_LOG("Number of default devices: %d", g_list_length(ad->defaultDevList));
 
