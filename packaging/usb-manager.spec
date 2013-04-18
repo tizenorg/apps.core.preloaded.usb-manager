@@ -52,7 +52,6 @@ vconftool set -t int memory/usb/mass_storage_status "0" -u 0 -i -f
 vconftool set -t int memory/usb/accessory_status "0" -u 5000 -i -f
 vconftool set -t int memory/usb/cur_mode "0" -u 0 -i -f
 vconftool set -t int db/usb/sel_mode "1" -f
-vconftool set -t int memory/usb/libusb_status "0" -u 0 -i -f
 
 
 %files
