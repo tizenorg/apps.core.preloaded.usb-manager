@@ -1,2 +1,2 @@
-com.samsung.quickpanel usb-server rx
-com.samsung.myfile usb-server x
+org.tizen.quickpanel usb-server rx
+org.tizen.myfile usb-server x
