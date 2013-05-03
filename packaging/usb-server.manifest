@@ -7,6 +7,8 @@
 		<filesystem path="/usr/bin/set_usb_debug.sh"            label="usb-server"/>
 		<filesystem path="/usr/bin/direct_set_debug.sh"         label="usb-server"/>
 		<filesystem path="/usr/bin/usb-server"                  label="usb-server"/>
+		<filesystem path="/usr/share/usb-server/data/usb_icon.png"
+		                                                        label="usb-server"/>
 	</assign>
 	<request>
 		<domain name="usb-server"/>
