@@ -63,4 +63,3 @@ vconftool set -t int db/usb/sel_mode "1" -f
 /usr/bin/direct_set_debug.sh
 /usr/bin/set_usb_debug.sh
 %attr(440,app,app) /usr/share/usb-server/data/usb_icon.png
-%attr(440,root,root) /etc/smack/accesses2.d/usb-server.rule
