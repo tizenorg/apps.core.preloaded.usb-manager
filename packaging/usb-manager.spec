@@ -57,7 +57,7 @@ vconftool set -t int db/usb/sel_mode "1" -f
 
 
 %files
-%manifest usb-server.manifest
+%manifest %{name}.manifest
 %defattr(540,root,root,-)
 /usr/bin/start_dr.sh
 /usr/bin/usb-server
