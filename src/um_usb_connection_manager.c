@@ -18,8 +18,8 @@
 #include "um_usb_connection_manager.h"
 
 /* brad.t.peters@intel.com - todo - move away from sys-v init */
-#define SDBD_START            "/etc/init.d/sdbd start"
-#define SDBD_STOP             "/etc/init.d/sdbd stop"
+#define SDBD_START            "/sbin/sdbd"
+#define SDBD_STOP             "/bin/killall sdbd"
 #define SET_USB0_IP_ETHERNET  "/sbin/ifconfig usb0 192.168.129.3 up"
 #define SET_USB0_IP_TETHERING SET_USB0_IP_ETHERNET /* This IP setting can be changed */
 #define UNSET_USB0_IP         "/sbin/ifconfig usb0 down"

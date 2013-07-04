@@ -57,7 +57,7 @@ sdb_set() {
 		;;
 	esac
 
-	/etc/init.d/sdbd start
+	/sbin/sdbd
 	echo "SDB enabled"
 }
 
@@ -98,7 +98,7 @@ usb_unset() {
 
 sdb_unset() {
 	usb_unset
-	/etc/init.d/sdbd stop
+	/bin/killall sdbd
 	echo "SDB disabled"
 }
 
