@@ -17,6 +17,10 @@
 
 #include <vconf.h>
 #include <devman.h>
+
+/* For multi-user support */
+#include <tzplatform_config.h>
+
 #include "um_common.h"
 
 #define SOCK_PATH        "/tmp/usb_server_sock"
@@ -39,6 +43,9 @@
 #define HOST_IDPRODUCT   "_HOST_IDPRODUCT"
 
 #define LAUNCH_RETRY 10
+
+#define USER  tzplatform_getuid(TZ_USER_NAME)
+#define GROUP tzplatform_getgid(TZ_SYS_USER_GROUP)
 
 int check_usbclient_connection()
 {
@@ -253,8 +260,8 @@ int ipc_request_server_init()
 		close(sockFd);
 		return -1;
 	}
-	if (0 != chown(SOCK_PATH, 5000, 5000)) {
-		USB_LOG("FAIL: chown(%s, 5000, 5000)", SOCK_PATH);
+	if (0 != chown(SOCK_PATH, USER, GROUP)) {
+		USB_LOG("FAIL: chown(%s, %s, %s)", SOCK_PATH, USER, GROUP);
 		close(sockFd);
 		return -1;
 	}

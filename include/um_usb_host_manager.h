@@ -22,11 +22,15 @@
 #include <sys/mount.h>
 #include <mntent.h>
 #include <string.h>
+
+/* For multi-user support */
+#include <tzplatform_config.h>
+
 #include "um_customize.h"
 #include "um_usb_notification.h"
 
 #define MTAB_FILE       "/etc/mtab"
-#define MOUNT_POINT     "/opt/storage/usb"
+#define MOUNT_POINT     tzplatform_mkpath(TZ_SYS_STORAGE, "usb")
 
 int um_get_device_info(UmMainData *ad);
 void destroy_device(gpointer data);

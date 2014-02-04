@@ -20,6 +20,7 @@ SET(PACKAGE ${PROJECT_NAME})
 SET(BINDIR "${PREFIX}/bin")
 SET(DATADIR "${PREFIX}/share/${PACKAGE}/data")
 SET(LOCALEDIR "${PREFIX}/share/locale")
+SET(SYSCONFDIR ${SYS_CONF_DIR})
 
 INCLUDE(FindPkgConfig)
 pkg_check_modules(pkgs REQUIRED
@@ -35,6 +36,7 @@ pkg_check_modules(pkgs REQUIRED
 	libusb-1.0
 	notification
 	capi-system-usb-accessory
+	libtzplatform-config
 	)
 
 FOREACH(flag ${pkgs_CFLAGS})
@@ -63,6 +65,6 @@ INSTALL(TARGETS ${PROJECT_NAME} DESTINATION ${BINDIR})
 INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/start_dr.sh DESTINATION ${BINDIR})
 
 # install smack rule file
-INSTALL(FILES ${CMAKE_SOURCE_DIR}/packaging/${PACKAGE}.rule DESTINATION /opt/etc/smack/accesses.d)
+INSTALL(FILES ${CMAKE_SOURCE_DIR}/packaging/${PACKAGE}.rule DESTINATION ${SYSCONFDIR}/smack/accesses.d)
 
 ADD_SUBDIRECTORY(po)
