@@ -22,6 +22,10 @@
 #include <dirent.h>
 #include <aul.h>
 #include <ctype.h>
+
+/* For multi-user support */
+#include <tzplatform_config.h>
+
 #include "um_usb_host_manager.h"
 
 #define TIMER_WAIT 0.5 /* Wait for 0.5 sec */
