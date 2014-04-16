@@ -6,7 +6,6 @@ Group:      Application Framework/Utilities
 License:    Apache-2.0
 Source0:    usb-server-%{version}.tar.gz
 Source1:    usb-server.manifest
-Source2:    usb-server.rule
 
 BuildRequires:  cmake
 BuildRequires:  libattr-devel
@@ -42,7 +41,6 @@ Description: USB server
 
 %build
 cp %{SOURCE1} .
-cp %{SOURCE2} .
 make %{?jobs:-j%jobs}
 
 %install
@@ -66,4 +64,3 @@ vconftool set -t int db/usb/sel_mode "1" -f
 %{_bindir}/direct_set_debug.sh
 %{_bindir}/set_usb_debug.sh
 %attr(440,root,%{TZ_SYS_USER_GROUP}) %{_datadir}/usb-server/data/usb_icon.png
-%attr(440,root,root) %{TZ_SYS_ETC}/smack/accesses.d/usb-server.rule
