@@ -28,7 +28,6 @@
 #include <devman.h>
 #include <sys/types.h>
 #include <glib.h>
-#include <syspopup_caller.h>
 #include <libusb.h>
 #include <sys/utsname.h>
 #include <pmapi.h>

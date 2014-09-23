@@ -10,7 +10,6 @@ Build-Depends: debhelper (>= 5),
 		libslp-setting-dev,
 		libdevman-dev,
 		dlog-dev,
-		syspopup-caller-dev,
 		iniparser-dev,
 		libappsvc-dev
 Standards-Version: 3.7.2

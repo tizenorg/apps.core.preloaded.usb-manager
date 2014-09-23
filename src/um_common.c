@@ -194,48 +194,8 @@ int launch_usb_syspopup(UmMainData *ad, POPUP_TYPE popupType, void *device)
 {
 	__USB_FUNC_ENTER__ ;
 	assert(ad);
-	int i;
-	int ret;
-	char type[DEVICE_ELEMENT_LEN];
 
-	bundle *b = NULL;
-	b = bundle_create();
-	um_retvm_if (!b, -1, "FAIL: bundle_create()");
-
-	snprintf(type, sizeof(type), "%d", popupType);
-	ret = bundle_add(b, SYSPOPUP_TYPE, type);
-	if (0 != ret) {
-		USB_LOG("FAIL: bundle_add()");
-		if (0 != bundle_free(b)) USB_LOG("FAIL: bundle_free()");
-		return -1;
-	}
-
-	switch (popupType) {
-	case SELECT_PKG_FOR_ACC_POPUP:
-		ret = add_acc_element_to_bundle(b, device);
-		break;
-	case SELECT_PKG_FOR_HOST_POPUP:
-		ret = add_host_element_to_bundle(b, device);
-		break;
-	default:
-		ret = 0;
-		break;
-	}
-	if (0 > ret) {
-		USB_LOG("FAIL: add_acc/host_element_to_bundle()");
-		if (0 != bundle_free(b)) USB_LOG("FAIL: bundle_free()");
-		return -1;
-	}
-
-	i = 0;
-	do {
-		ret = syspopup_launch(USB_SYSPOPUP, b);
-		if (0 <= ret) break;
-		USB_LOG("FAIL: syspopup_launch() returns %d", ret);
-	} while (i++ < LAUNCH_RETRY);
-
-	ret = bundle_free(b);
-	um_retvm_if (0 != ret, -1, "FAIL: bundle_free()");
+	// TODO : display a popup
 
 	__USB_FUNC_EXIT__ ;
 	return 0;

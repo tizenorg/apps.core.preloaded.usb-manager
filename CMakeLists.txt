@@ -28,7 +28,6 @@ pkg_check_modules(pkgs REQUIRED
 	ecore
 	vconf
 	dlog
-	syspopup-caller
 	devman
 	pmapi
 	appsvc

@@ -170,6 +170,7 @@ int launch_acc_app(char *appId)
 
 	if (0 > bundle_free(b))
 		USB_LOG("FAIL: bundle_free(b)");
+
 	__USB_FUNC_EXIT__;
 	return 0;
 }

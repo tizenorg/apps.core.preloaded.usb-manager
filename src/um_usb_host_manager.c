@@ -638,6 +638,7 @@ int launch_host_app(char *appId)
 	assert(appId);
 
 	bundle *b;
+
 	int ret;
 
 	b = bundle_create();
@@ -752,36 +753,7 @@ static void um_load_usbotg_popup(char *popupname, char *popuptype, char *devname
 	assert(popupname);
 	assert(popuptype);
 
-	bundle *b;
-	int ret;
-
-	b = bundle_create();
-	if (!b) {
-		USB_LOG("FAIL: bundle_create()");
-		return;
-	}
-
-	ret = bundle_add(b, "POPUP_TYPE", popuptype);
-	if (ret < 0) {
-		USB_LOG("FAIL: bundle_add()");
-		bundle_free(b);
-		return;
-	}
-
-	if (devname) {
-		ret = bundle_add(b, "DEVICE_PATH", devname);
-		if (ret < 0) {
-			USB_LOG("FAIL: bundle_add()");
-			bundle_free(b);
-			return ;
-		}
-	}
-
-	if (syspopup_launch(popupname, b) < 0) {
-		USB_LOG("FAIL: syspopup_launch()");
-	}
-
-	bundle_free(b);
+	// TODO : display a popup
 
 	__USB_FUNC_EXIT__;
 }
