@@ -45,7 +45,7 @@
 #define LAUNCH_RETRY 10
 
 #define USER  tzplatform_getuid(TZ_USER_NAME)
-#define GROUP tzplatform_getgid(TZ_SYS_USER_GROUP)
+#define GROUP tzplatform_getgid(TZ_USER_NAME)
 
 int check_usbclient_connection()
 {
