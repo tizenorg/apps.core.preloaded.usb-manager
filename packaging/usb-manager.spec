@@ -60,6 +60,4 @@ vconftool set -t int db/usb/sel_mode "1" -f
 %{_bindir}/start_dr.sh
 %{_bindir}/usb-server
 %attr(440,root,root) %{_datadir}/locale/*/LC_MESSAGES/usb-server.mo
-%{_bindir}/direct_set_debug.sh
-%{_bindir}/set_usb_debug.sh
 %attr(440,root,%{TZ_SYS_USER_GROUP}) %{_datadir}/usb-server/data/usb_icon.png
